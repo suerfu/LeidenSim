@@ -9,6 +9,8 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "G4NistManager.hh"
 
+#define M_PI 3.1415926535
+
 using namespace CLHEP;
 
 class GeometryManager{
