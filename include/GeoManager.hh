@@ -1,5 +1,5 @@
-#ifndef GEOMETRYMANAGER_H
-#define GEOMETRYMANAGER_H 1
+#ifndef GEOMANAGER_H
+#define GEOMANAGER_H 1
 
 #include <map>
 #include <utility>
@@ -13,13 +13,13 @@
 
 using namespace CLHEP;
 
-class GeometryManager{
+class GeoManager{
 
 public:
 
-    GeometryManager();
+    GeoManager();
 
-    ~GeometryManager();
+    ~GeoManager();
 
     void Add( G4String name, G4LogicalVolume* log, G4VPhysicalVolume* phys);
 
