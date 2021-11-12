@@ -1,6 +1,7 @@
 
 #include "GeoShielding.hh"
 #include "GeoShieldingMessenger.hh"
+#include "GeoManager.hh"
 
 #include "G4Box.hh"
 #include "G4VSolid.hh"

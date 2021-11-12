@@ -55,67 +55,69 @@ void GeoCryostat::ConstructTanks(){
 void GeoCryostat::ConstructColdParts(){
 	G4String name = "Cryostat";
 
-	//Holes
-	G4int nHoleSizes = GeoManager::Get()->GetNumberOfHoleSizes();
-	G4Tubs** holes = new G4Tubs*[nHoleSizes];
-	for(int ih=0; ih<nHoleSizes; ih++){
-		holes[ih] = new G4Tubs( name+"Hole",
+	//Drills
+	G4int nDrillSizes = GeoManager::Get()->GetDrillChart()->size();
+	G4Tubs** drills = new G4Tubs*[nDrillSizes];
+	for(int ih=0; ih<nDrillSizes; ih++){
+		drills[ih] = new G4Tubs( name+"Drill",
 								0, 
-								GeoManager::Get()->GetHoleRadius(ih),
+								GeoManager::Get()->GetDrillChart()[ih],
 								GeoManager::Get()->GetDimensions("maxPlateThickness")/2,//make sure to drill through all plates.
 								0, 2*MY_PI);
 	}
 	//Plate with holes
 	for(int ip=0; ip<GeoManager::Get()->GetNumberOfCryoPlates(); ip++){
-		G4Tubs* plate = new G4Tubs( name+GeoManager::Get()->GetCryoPlateName(ip), 
+		G4String plateName = GeoManager::Get()->GetCryoPlateName(ip);
+		G4Tubs* plate = new G4Tubs( name+plateName, 
 									0, 
-									GeoManager::Get()->GetDimensions(GeoManager::Get()->GetCryoPlateName(ip)+"Radius"),
-									GeoManager::Get()->GetDimensions(GeoManager::Get()->GetCryoPlateName(ip)+"Thickness")/2,
+									GeoManager::Get()->GetCryoPlateR(ip),
+									GeoManager::Get()->GetCryoPlateH(ip)/2,
 									0, 2*MY_PI);
 		G4VSolid* plateWithHoles = plate;
-		G4int nHoles = GeoManager::Get()->GetNumberOfCryoPlateHoles(ip);
+		auto holes = GeoManager::Get()->GetCryoPlateHoles(ip);
 		//drill holes
-		for(int ih=0; ih<nHoles; i++){
-			plateWithHoles = new G4SubtractionSolid( name+GeoManager::Get()->GetCryoPlateName(ip),
+		for(auto ih = holes->begin(); ih != holes->end(); ++ih){
+			plateWithHoles = new G4SubtractionSolid( name+plateName,
 													plateWithHoles, 
-													holes[GeoManager::Get()->GetCryoPlateHoleSize(ip,ih)],
+													drills[it->first],
 													0,
-													GeoManager::Get()->GetCryoPlateHolePos(ip, ih),
+													it->second,
 													);
 		}
 		G4LogicalVolume * plateLogic = new G4LogicalVolume( plateWithHoles,
 													GeoManager::Get()->GetCryoPlateMaterial(ip),
-													name+GeoManager::Get()->GetCryoPlateName(ip)+"LV");
+													name+plateName+"LV");
 		G4VPhysicalVolume* platePhysical = new G4PVPlacement(0,
 													G4ThreeVector(0,0,GeoManager::Get()->GetCryoPlateZ(ip)),
 													plateLogic,
-													name+GeoManager::Get()->GetCryoPlateName(ip)+"Physical",
+													name+plateName+"Physical",
 													motherLogic,
 													false,
 													0,
 													fCheckOverlaps);
-		GeoManager::Get()->Add( name+GeoManager::Get()->GetCryoPlateName(ip),
+		GeoManager::Get()->Add( name+plateName,
 								plateLogic, platePhysical);
 	}
 	//Support beams
 	for(int ib=0; ib<GeoManager::Get()->GetNumberOfCryoBeams(); ip++){
-		G4Tubs* beam = new G4Tubs( name+GeoManager::Get()->GetCryoBeamName(ip),
+		G4String beamName = GeoManager::Get()->GetCryoBeamName(ip);
+		G4Tubs* beam = new G4Tubs( name+beamName,
 									0,
-									GeoManager::Get()->GetDimensions(GeoManager::Get()->GetCryoBeamName(ib)+"Radius"),
-									GeoManager::Get()->GetDimensions(GeoManager::Get()->GetCryoBeamName(ib)+"Height")/2,
+									GeoManager::Get()->GetCryoBeamR(ib),
+									GeoManager::Get()->GetCryoBeamL(ib)/2,
 									0, 2*MY_PI);
 		G4LogicalVolume * beamLogic = new G4LogicalVolume( beam,
 									GeoManager::Get()->GetCryoBeamMaterial(ib),
-									name+GeoManager::Get()->GetCryoBeamName(ib)+"LV");
+									name+beamName+"LV");
 		G4VPhysicalVolume* beamPhysical = new G4PVPlacement(0,
 									GeoManager::Get()->GetCryoBeamPos(ib),
 									beamLogic,
-									name+GeoManager::Get()->GetCryoBeamName(ib)+"Physical",
+									name+beamName+"Physical",
 									motherLogic,
 									false,
 									0,
 									fCheckOverlaps);
-		GeoManager::Get()->Add( name+GeoManager::Get()->GetCryoBeamName(ib),
+		GeoManager::Get()->Add( name+beamName,
 								beamLogic, beamPhysical);
 	}
 	//Mixing chammber (inner most shield). Top and bottom are placed as "plates with holes"!
