@@ -1,5 +1,6 @@
 
 #include "GeoManager.hh"
+#include "TTree.h"
 // singleton
 GeoManager* GeoManager::me = 0;
 
@@ -151,12 +152,20 @@ G4Material*  GeoManager::GetCryoBeamMaterial(int ib){
 		return fCryoBeams[ib].material;
 	}
 }
-G4double  GeoManager::GetCryoBeamR(int ib){
+G4double  GeoManager::GetCryoBeamRI(int ib){
 	if(ib<0||ib>fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
 		return "N.A.";
 	}else{
-		return fCryoBeams[ib].r;
+		return fCryoBeams[ib].rI;
+	}
+}
+G4double  GeoManager::GetCryoBeamRO(int ib){
+	if(ib<0||ib>fCryoBeams.size()){
+		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
+		return "N.A.";
+	}else{
+		return fCryoBeams[ib].rO;
 	}
 }
 G4double  GeoManager::GetCryoBeamL(int ib){
@@ -197,9 +206,131 @@ void  GeoManager::DefineMaterials( ){
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
-void LoadDimensions(){
-	
+void GeoManager::LoadDimensions(){
+
+	//General dimensions
+	TTree *t = new TTree("tDimension","General Dimensions");
+	t->ReadFile(fDimensionFile, "name/C:dim/D");
+	std::string name;
+	double dim;
+	t->SetBranchAddress("name", &name);
+	t->SetBranchAddress("dim", &dim);
+	for(int i=0; i<t->GetEntries(); i++){
+		t->GetEntry(i);
+		dimensions[G4String(name)] = dim*mm;
+	}
+
+	//Cryostat walls
+	LoadCryoWalls();
+	//Cryostat plates
+	LoadCryoPlate();
+	//Cryostat beams
+	LoadCryoBeam();
+
 }
+
+void GeoManager::LoadCryoWalls(){
+	//Cryostat walls
+	TTree *tCW = new TTree("tCW", "Cryostat wall coordinates");
+	tCW->ReadFile(fCryostatWallFile, "z[4]/D:r[4]/D");
+	double z[4], r[4];
+	tCW->SetBranchAddress("z",z);
+	tCW->SetBranchAddress("r",r);
+	for(int i=0; i<4; i++){
+		fCryostatCoordinateNP[i]=0;
+		fCryostatCoordinateR[i] = new G4double[tCW->GetEntries()];
+		fCryostatCoordinateZ[i] = new G4double[tCW->GetEntries()];
+	}
+	for(int ip=0; ip<tCW->GetEntries(); ip++){
+		tCW->GetEntry(ip);
+		for(int i=0; i<4; i++){
+			fCryostatCoordinateR[i][ip] = r[i]*mm;
+			fCryostatCoordinateZ[i][ip] = z[i]*mm;
+			if(r[i]<0&&fCryostatCoordinateNP[i]==0){
+				fCryostatCoordinateNP[i] = ip;
+			}
+		}
+	}
+	for(int i=0; i<4; i++){
+		if(fCryostatCoordinateNP[i]==0)
+			fCryostatCoordinateNP[i] = tCW->GetEntries();
+	}
+}
+void GeoManager::LoadCryoPlate(){
+	//first load drill chart
+	fDrillChart = new std::vector<G4double>;
+	std::ifstream cryoPlateFile(fCryoPlateFile, std::ifstream::in);
+	char temp[256];
+	cryoPlateFile.getLine(temp, 256);
+	cryoPlateFile.getLine(temp, 256);
+	//drill charge on line 3
+	cryoPlateFile.getLine(temp, 256);
+	TString drillChart(temp+1);//remove the # in the first position.
+	TString drill;
+	Ssiz_t from = 0;
+	while(drillChart.Tokenize(drill, from, " ")){
+		G4double drillR = drill.Atof()*mm;
+		fDrillChart->push_back(drillR);
+	}
+	cryoPlateFile.close();
+
+	TTree *tCP = new TTree("tCP", "Plates in Cryostat");
+	tCP->ReadFile(fCryoPlateFile, "name/C:r/D:thickness/D:z/D:material/C:nHoles/I:xhole[6]/D:yhole[6]/D:drill[6]/I");
+	string name, material;
+	double r, thickness, z, x[6], y[6];
+	int nHoles, drill[6];
+	tCP->SetBranchAddress("name", &name);
+	tCP->SetBranchAddress("r",    &r);
+	tCP->SetBranchAddress("thickness", &thickness);
+	tCP->SetBranchAddress("z",    &z);
+	tCP->SetBranchAddress("material", &material);
+	tCP->SetBranchAddress("nHoles",&nHoles);
+	tCP->SetBranchAddress("xhole", x);
+	tCP->SetBranchAddress("yhole", y);
+	tCP->SetBranchAddress("drill", drill);
+	for(int i=0; i<tCP->GetEntries(); i++){
+		tCP->GetEntry(i);
+		CryoPlate plate;
+		plate.name = name;
+		plate.r = r*mm;
+		plate.thickness = thickness*mm;
+		plate.z = z*mm;
+		plate.material = GetMaterial(G4String(material));
+		plate.holes = new std::vector< std::pair<G4int, G4ThreeVector> >;
+		for(int ih=0; ih<nHoles; ih++){
+			plate.holes->push_back( 
+						std::make_pair( drill[ih], 
+							G4ThreeVector(x[ih],y[ih],0)));
+		}
+		fCryoPlates.push_back(plate);
+	}
+
+}
+
+void GeoManager::LoadCryoBeam(){
+	TTree *tCB = new TTree("tCB", "Beams in Cryostat");
+	tCB->ReadFile(fCryoBeamFile, "name/C:rO/D:rI/D:l/D:pos[3]/D:material/C");
+	string name, material;
+	double rO, rI, l, pos[3];
+	tCB->SetBranchAddress("name", &name);
+	tCB->SetBranchAddress("rI",    &rI);
+	tCB->SetBranchAddress("rO",    &rO);
+	tCB->SetBranchAddress("l",    &l);
+	tCB->SetBranchAddress("pos",  pos);
+	tCB->SetBranchAddress("material". &material);
+	for(int i=0; i<tCB->GetEntries(); i++){
+		tCB->GetEntry(i);
+		CryoBeam beam;
+		beam.name = name;
+		beam.rI = rI*mm;
+		beam.rO = rO*mm;
+		beam.l = l*mm;
+		beam.pos = G4ThreeVector(pos[0]*mm, pos[1]*mm,pos[2]*mm);
+		fCryoBeams.push_back(beam);
+	}
+}
+
+
 
 
 

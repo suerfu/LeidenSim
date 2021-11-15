@@ -102,8 +102,8 @@ void GeoCryostat::ConstructColdParts(){
 	for(int ib=0; ib<GeoManager::Get()->GetNumberOfCryoBeams(); ip++){
 		G4String beamName = GeoManager::Get()->GetCryoBeamName(ip);
 		G4Tubs* beam = new G4Tubs( name+beamName,
-									0,
-									GeoManager::Get()->GetCryoBeamR(ib),
+									GeoManager::Get()->GetCryoBeamRI(ib),
+									GeoManager::Get()->GetCryoBeamRO(ib),
 									GeoManager::Get()->GetCryoBeamL(ib)/2,
 									0, 2*MY_PI);
 		G4LogicalVolume * beamLogic = new G4LogicalVolume( beam,

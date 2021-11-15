@@ -4,11 +4,13 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include <fstream>
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "G4NistManager.hh"
+#include "SystemOfUnits.h"
 
 #define M_PI 3.1415926535
 
@@ -87,11 +89,13 @@ private:
 	//Beams in cold stages
 	struct CryoBeam{
 		G4Stringn name;
-		G4double r;
+		G4double rI;//inner radius
+		G4double rO;//outer radius
 		G4double l;
 		G4ThreeVector pos;
 		G4Material* material;
 	}
+//FIXME copy constructor?? or vector of pointers??
 	std::vector<CryoBeam> fCryoBeams;
 
 
@@ -107,8 +111,8 @@ private:
 	void LoadDimensions();
 	//Specifically, the special volumes
 	void LoadCryoWalls();
-	void AddCryoPlate(G4String line);
-	void AddCryoBeam(G4String line);
+	void LoadCryoPlate();
+	void LoadCryoBeam ();
 
 };
 
