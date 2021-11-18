@@ -10,6 +10,9 @@
 #include "G4NistManager.hh"
 
 #include "GeometryConstructionMessenger.hh"
+#include "GeoManager.hh"
+#include "GeoShielding.hh"
+#include "GeoCryostat.hh"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -29,20 +32,19 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 
-GeometryConstruction::GeometryConstruction( /*RunAction* ra,*/ GeometryManager* gm) : G4VUserDetectorConstruction(),
-//    fRunAction( ra ), 
-    fGeometryManager( gm ) {
+GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction(),
+{
 
     fCheckOverlaps = true;
     fDetectorMessenger = new GeometryConstructionMessenger(this);
 
     // Set default values for world.
     
-    world_x = 1.*m;
-    world_y = 1.*m;
-    world_z = 1.*m;
+    world_x = 10.*m;
+    world_y = 10.*m;
+    world_z = 10.*m;
 
-    simple_cube = new SimpleCube( gm );
+  //  simple_cube = new SimpleCube( gm );
 }
 
 
@@ -68,7 +70,7 @@ G4VPhysicalVolume* GeometryConstruction::Construct(){
 G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
     G4String world_name = "world";
-    G4Material* world_material = fGeometryManager->GetMaterial("G4_Galactic");
+    G4Material* world_material = GeoManagerr::Get()->GetMaterial("G4_Galactic");//fGeometryManager->GetMaterial("G4_Galactic");
 
     G4Box* world_solid = new G4Box( world_name+"_sld", world_x/2.0, world_y/2.0, world_z/2.0);
     G4LogicalVolume* world_lv = new G4LogicalVolume( world_solid, world_material, world_name+"_lv");
@@ -76,15 +78,33 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
     world_lv->SetVisAttributes( G4VisAttributes::Invisible );
 
-    fGeometryManager->Add( world_name, world_lv, world_pv );
+	GeoManager::Get()->Add( world_name, world_lv, world_pv );
 
     return world_pv;
 }
 
 
 void GeometryConstruction::ConstructUserVolumes(){
+	//Mark that we are ready to load dimensions!
+	GeoManager::Get()->GeometryTypeAndFilesSet();
+	G4int geoType = GeoManager::Get()->GetGeometryType();
+	switch(geoType){
+		case 0: //TESSERACT
+			GeoShielding* TESSERACTShield = new GeoShielding();
+			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
+			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
+			TESSERACTShield->Construct();
+			TESSERACTCryostat->Construct();
+			break;
+		case 1: //other
+			break;
+		defalut:
+			G4cerr<<"GeometryConstruction:: Geometry Type"<<geoType<<" not defined!"<<G4endl;
+			break;
+	}
 
-    simple_cube->Construct();
+
+ //   simple_cube->Construct();
 }
 
 

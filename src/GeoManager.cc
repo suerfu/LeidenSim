@@ -7,7 +7,8 @@ GeoManager* GeoManager::me = 0;
 GeoManager::GeoManager(){
     material_man = GetMaterialManager();
     DefineMaterials();
-	LoadDimensions();
+	fDimensionFilesSet = false;
+	fDimensionsLoaded  = false;
 }
 
 GeoManager::~GeoManager(){
@@ -16,12 +17,22 @@ GeoManager::~GeoManager(){
 }
 
 GeoManager* GeoManager::Get(){
-	if (!me)
+	if (!me){
 	  me = new GeoManager();
+	}
+	if (!fDimensionsLoaded){
+	// Load dimensions later after SetDimensionFiles() is called!
+	// Make sure the dimension file names are passed by GeometryConstructionMessenger 
+	// then SetDimensionFiles() is called BEFORE geometry construction!
+		LoadDimensions();
+	}
 	return me;
 }
 
 //public methods
+void GeoManager::SetFilePath( G4String file, G4String pathAndName){
+	dimensionFiles[file] = pathAndName;
+}
 void GeoManager::Add( G4String name, G4LogicalVolume* log, G4VPhysicalVolume* phys){
     dictionary[name] = std::make_pair( log, phys);
 }
@@ -207,6 +218,12 @@ void  GeoManager::DefineMaterials( ){
 }
 
 void GeoManager::LoadDimensions(){
+	if(!fDimensionFilesSet){
+		return;
+	}
+	if(fDimensionsLoaded){
+		return;
+	}
 
 	//General dimensions
 	TTree *t = new TTree("tDimension","General Dimensions");
@@ -226,6 +243,8 @@ void GeoManager::LoadDimensions(){
 	LoadCryoPlate();
 	//Cryostat beams
 	LoadCryoBeam();
+
+	fDimensionsLoaded = true;
 
 }
 

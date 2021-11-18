@@ -24,16 +24,21 @@ public:
     virtual void SetNewValue(G4UIcommand*, G4String);
 
 private:
-    GeometryConstruction* detector;
+   // GeometryConstruction* detector;
 
     G4UIdirectory* directory;
-    G4UIcmdWith3VectorAndUnit* posCmd;
-        // Command to specify position of the farside detector
-    G4UIcmdWithADoubleAndUnit* angCmd_x;
-    G4UIcmdWithADoubleAndUnit* angCmd_y;
-    G4UIcmdWithADoubleAndUnit* angCmd_z;
-        // Command to specify angle of rotation the farside detector
-    G4UIcommand* place_detector;
+	G4UIcmdWithAnInteger* fGeoTypeCmd;
+	G4UIcmdWithAString*   fDimensionFileCmd;
+	G4UIcmdWithAString*   fCryostatWallFileCmd;
+	G4UIcmdWithAString*   fCryoPlateFileCmd;
+	G4UIcmdWithAString*   fCryoBeamFile;
+   // G4UIcmdWith3VectorAndUnit* posCmd;
+   //     // Command to specify position of the farside detector
+   // G4UIcmdWithADoubleAndUnit* angCmd_x;
+   // G4UIcmdWithADoubleAndUnit* angCmd_y;
+   // G4UIcmdWithADoubleAndUnit* angCmd_z;
+   //     // Command to specify angle of rotation the farside detector
+   // G4UIcommand* place_detector;
 };
 
 #endif

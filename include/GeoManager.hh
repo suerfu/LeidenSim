@@ -40,6 +40,14 @@ public:
 		return fCheckOverlaps;
 	}
 
+	void SetGeometryType(int type){fGeoType = type;};
+	G4int GetGeometryType(){return fGeoType;};
+	void SetFilePath(G4String file, G4String pathAndName);
+	// call it in GeometryConstruction::ConstructUserVolume(), 
+	// which is after all dimension file names being set.
+	// The dimensions will be loaded the next time GeoManager::Get() is called
+	void GeometryTypeAndFilesSet(){fDimensionFilesSet = true};
+
 	//Cryostat walls
 	G4int     GetCryostatCoordinateNP(int ithLayer);
 	G4double* GetCryostatCoordinateR (int ithLayer);
@@ -66,11 +74,32 @@ public:
 
 private:
 
+	//Genereal for all geometries
     std::map< G4String, std::pair<G4LogicalVolume*, G4VPhysicalVolume*> > dictionary;
+	std::map< G4String, G4double > dimensions;
+	std::map< G4String, G4String > dimensionFiles;
+	bool fCheckOverlaps;
+
+	//Load dimensions
+	bool fDimensionFilesSet;
+	bool fDimensionsLoaded;
+	//Tag to configur different geometries. Default 0.
+	// 0 -> TESSERACT physics detector with shield, cryostat, and inner detector.
+	// 1 -> ...
+	// 2 -> ...
+	// New GeoXXX classes should be defined for each entry. 
+	// Modify LoadDimensions() accordingly to add interface to new classes. If dimensions are hard coded, this step is not necessary.
+	// GeometryConstruction::ConstructUserVolume() calls the specific GeoXXX::Construct() according to this tag.
+	int  fGeometryType; 
+
+	G4String fDimensionFile, fCryostatWallFile, fCryoPlateFile, fCryoBeamFile;
+	void LoadDimensions();
+	//Specifically, the special volumes
+	void LoadCryoWalls();
+	void LoadCryoPlate();
+	void LoadCryoBeam ();
 
 	//dimensions
-	//General
-	std::map< G4String, G4double > dimensions;
 	//Polycone for crystat walls
 	G4int    fCryostatCoordinateNP[4];
 	G4double* fCryostatCoordinateR[4];
@@ -99,20 +128,11 @@ private:
 	std::vector<CryoBeam> fCryoBeams;
 
 
-
-	bool fCheckOverlaps;
-
+	/// Materials
     G4NistManager* material_man;
 
     /// User should define all materials to be used in this function.
     void DefineMaterials();
-
-	//Load dimensions
-	void LoadDimensions();
-	//Specifically, the special volumes
-	void LoadCryoWalls();
-	void LoadCryoPlate();
-	void LoadCryoBeam ();
 
 };
 

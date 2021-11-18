@@ -56,7 +56,7 @@ private:
     G4double world_y;
     G4double world_z;
 
-    SimpleCube* simple_cube;
+    //SimpleCube* simple_cube;
 
 };
 
