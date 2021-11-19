@@ -5,10 +5,8 @@
 #define GeometryConstruction_h 1
 
 #include "G4VUserDetectorConstruction.hh"
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 #include "RunAction.hh"
-
-#include "SimpleCube.hh"
 
 #include "globals.hh"
 //#include "G4RotationMatrix.hh"
@@ -28,7 +26,7 @@ class GeometryConstruction : public G4VUserDetectorConstruction{
 
 public:
 
-    GeometryConstruction( /*RunAction* ra,*/ GeometryManager* man );
+    GeometryConstruction();
 
     virtual ~GeometryConstruction();
 
@@ -48,7 +46,6 @@ private:
 
     //RunAction* fRunAction;
     GeometryConstructionMessenger* fDetectorMessenger;
-    GeometryManager* fGeometryManager;
     
     bool fCheckOverlaps;
 

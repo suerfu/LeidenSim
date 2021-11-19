@@ -32,11 +32,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 
-GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction(),
+GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction()
 {
 
     fCheckOverlaps = true;
-    fDetectorMessenger = new GeometryConstructionMessenger(this);
+    //fDetectorMessenger = new GeometryConstructionMessenger(this);
+    fDetectorMessenger = new GeometryConstructionMessenger();
 
     // Set default values for world.
     
@@ -70,7 +71,7 @@ G4VPhysicalVolume* GeometryConstruction::Construct(){
 G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
     G4String world_name = "world";
-    G4Material* world_material = GeoManagerr::Get()->GetMaterial("G4_Galactic");//fGeometryManager->GetMaterial("G4_Galactic");
+    G4Material* world_material = GeoManager::Get()->GetMaterial("G4_Galactic");//fGeometryManager->GetMaterial("G4_Galactic");
 
     G4Box* world_solid = new G4Box( world_name+"_sld", world_x/2.0, world_y/2.0, world_z/2.0);
     G4LogicalVolume* world_lv = new G4LogicalVolume( world_solid, world_material, world_name+"_lv");
@@ -85,22 +86,24 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
 
 void GeometryConstruction::ConstructUserVolumes(){
-	//Mark that we are ready to load dimensions!
+	G4cout<<"Construct user volumes..."<<G4endl;
+	// Load dimensions later after GeoManager::SetFilePath() is calledby GeometryConstructionMessenger 
+	// Mark that we are ready to load dimensions!
 	GeoManager::Get()->GeometryTypeAndFilesSet();
+	// Load dimension.
+	GeoManager::Get()->LoadDimensions();
 	G4int geoType = GeoManager::Get()->GetGeometryType();
-	switch(geoType){
-		case 0: //TESSERACT
+	if(geoType==0){ //TESSERACT
 			GeoShielding* TESSERACTShield = new GeoShielding();
 			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
 			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
 			TESSERACTShield->Construct();
 			TESSERACTCryostat->Construct();
-			break;
-		case 1: //other
-			break;
-		defalut:
-			G4cerr<<"GeometryConstruction:: Geometry Type"<<geoType<<" not defined!"<<G4endl;
-			break;
+	}
+	else if(geoType==1){ //other
+	}
+	else{ 
+		G4cerr<<"GeometryConstruction:: Geometry Type"<<geoType<<" not defined!"<<G4endl;
 	}
 
 

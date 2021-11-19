@@ -14,7 +14,7 @@
 #include "G4Box.hh"
 #include "G4GeneralParticleSource.hh"
 
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 
 #include "RunAction.hh"
 
@@ -32,7 +32,7 @@ class GeneratorAction : public G4VUserPrimaryGeneratorAction {
 
 public:
 
-    GeneratorAction( RunAction* runAction, GeometryManager* geoManager);
+    GeneratorAction( RunAction* runAction);
 
     virtual ~GeneratorAction();
 
@@ -63,8 +63,6 @@ private:
     RunAction* fRunAction;
 
     CommandlineArguments* fCmdlArgs;
-
-    GeometryManager* fGeometryManager;
 
     G4ParticleGun*  fgun;
 

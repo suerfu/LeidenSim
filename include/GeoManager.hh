@@ -10,9 +10,8 @@
 #include "globals.hh"
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "G4NistManager.hh"
-#include "SystemOfUnits.h"
-
-#define M_PI 3.1415926535
+#include "G4SystemOfUnits.hh"
+#include "G4ThreeVector.hh"
 
 using namespace CLHEP;
 
@@ -21,7 +20,7 @@ private:
 	GeoManager();
 	static GeoManager *me;
 public:
-	sstatic GeoManager* Get();
+	static GeoManager* Get();
     ~GeoManager();
 
     void Add( G4String name, G4LogicalVolume* log, G4VPhysicalVolume* phys);
@@ -40,13 +39,15 @@ public:
 		return fCheckOverlaps;
 	}
 
-	void SetGeometryType(int type){fGeoType = type;};
-	G4int GetGeometryType(){return fGeoType;};
+	void SetGeometryType(int type){fGeometryType = type;};
+	G4int GetGeometryType(){return fGeometryType;};
 	void SetFilePath(G4String file, G4String pathAndName);
 	// call it in GeometryConstruction::ConstructUserVolume(), 
 	// which is after all dimension file names being set.
 	// The dimensions will be loaded the next time GeoManager::Get() is called
-	void GeometryTypeAndFilesSet(){fDimensionFilesSet = true};
+	void GeometryTypeAndFilesSet(){fDimensionFilesSet = true;};
+	// read the files
+	void LoadDimensions();
 
 	//Cryostat walls
 	G4int     GetCryostatCoordinateNP(int ithLayer);
@@ -66,7 +67,8 @@ public:
 	G4int GetNumberOfCryoBeams(){return fCryoBeams.size();};
 	G4String  GetCryoBeamName(int ib);
 	G4Material* GetCryoBeamMaterial(int ib);
-	G4double GetCryoBeamR(int ib);
+	G4double GetCryoBeamRI(int ib);
+	G4double GetCryoBeamRO(int ib);
 	G4double GetCryoBeamL(int ib);
 	G4ThreeVector GetCryoBeamPos(int ib);
 
@@ -93,7 +95,6 @@ private:
 	int  fGeometryType; 
 
 	G4String fDimensionFile, fCryostatWallFile, fCryoPlateFile, fCryoBeamFile;
-	void LoadDimensions();
 	//Specifically, the special volumes
 	void LoadCryoWalls();
 	void LoadCryoPlate();
@@ -112,18 +113,18 @@ private:
 		G4double z;
 		G4Material* material;
 		std::vector< std::pair<G4int, G4ThreeVector> >* holes;
-	}
-	std::vector<G4double>* fDrillChart;
+	};
+	std::vector< G4double > * fDrillChart;
 	std::vector<CryoPlate> fCryoPlates;
 	//Beams in cold stages
 	struct CryoBeam{
-		G4Stringn name;
+		G4String name;
 		G4double rI;//inner radius
 		G4double rO;//outer radius
 		G4double l;
 		G4ThreeVector pos;
 		G4Material* material;
-	}
+	};
 //FIXME copy constructor?? or vector of pointers??
 	std::vector<CryoBeam> fCryoBeams;
 

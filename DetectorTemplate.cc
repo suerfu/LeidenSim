@@ -11,7 +11,7 @@
 
 #include "G4RunManager.hh"
 
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 #include "GeometryConstruction.hh"
 #include "GeneratorAction.hh"
 
@@ -54,8 +54,8 @@ int main(int argc,char** argv){
         if( macroname==""){
             G4cerr << "Macro file not specified. It should be specified with --macro or -m option.\n";
             G4cerr << "Program usage is:\n";
-            PrintUsage();
-            return -2;
+           // PrintUsage();
+           // return -2;
         }
     }
 
@@ -71,8 +71,7 @@ int main(int argc,char** argv){
 
     // Construct detector geometry
     //
-    GeometryManager* geometryManager = new GeometryManager();
-    GeometryConstruction* detectorConstruction = new GeometryConstruction( geometryManager );
+    GeometryConstruction* detectorConstruction = new GeometryConstruction();
     runManager->SetUserInitialization( detectorConstruction );
 
 
@@ -101,7 +100,7 @@ int main(int argc,char** argv){
 
     // Primary generator
     //
-    GeneratorAction* generatorAction = new GeneratorAction( runAction, geometryManager );
+    GeneratorAction* generatorAction = new GeneratorAction( runAction);
     runManager->SetUserAction( generatorAction );
 
 

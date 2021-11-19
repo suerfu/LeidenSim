@@ -8,6 +8,8 @@ shieldHeight      1385
 SSThickness       50
 #second layer, Pb
 PbThickness       200
+#third layer, PE
+PEThickness       200
 #Cylindrical cavity for cryostat
 cavityRadius      235
 #cavity bottom to shield cube bottom

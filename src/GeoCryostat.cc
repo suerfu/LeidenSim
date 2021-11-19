@@ -1,8 +1,9 @@
 
 #include "GeoCryostat.hh"
-#include "GeoCryostatMessenger.hh"
 
 #include "G4Box.hh"
+#include "G4Tubs.hh"
+#include "G4Polycone.hh"
 #include "G4VSolid.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4LogicalVolume.hh"
@@ -19,7 +20,7 @@ GeoCryostat::GeoCryostat( ){
 void GeoCryostat::Construct(){
     
 	G4String motherName="world";
-    motherLogic = gman->GetLogicalVolume(motherName);
+    motherLogic = GeoManager::Get()->GetLogicalVolume(motherName);
     if( motherLogic==0 ){
         G4cerr << "Cannot find the mother volume "<<motherName<< G4endl;
         return;
@@ -36,19 +37,19 @@ void GeoCryostat::ConstructTanks(){
 		G4int nP = GeoManager::Get()->GetCryostatCoordinateNP(i);
 		G4double* r =  GeoManager::Get()->GetCryostatCoordinateR(i);
 		G4double* z =  GeoManager::Get()->GetCryostatCoordinateZ(i);
-		G4Polycone* cryostatSolid = new G4Polycone(names[i], 0, 2*MY_PI, nP, r, z);
+		G4Polycone* cryostatSolid = new G4Polycone(names[i], 0, 2*M_PI, nP, r, z);
 		G4LogicalVolume* cryostatLogic = new G4LogicalVolume( cryostatSolid,
 																GeoManager::Get()->GetMaterial("Titanium"),
 																names[i]+"LV");
-		G4VPhysicalVolume* cryostatPhysical = new G4VPhysicalVolume(0,
+		G4VPhysicalVolume* cryostatPhysical = new G4PVPlacement(0,
 																G4ThreeVector(0,0,0),
 																cryostatLogic,
-																name[i]+"Physical",
+																names[i]+"Physical",
 																motherLogic,
 																false,
 																0,
 																fCheckOverlaps);
-		GeoManager::Get()->Add( name[i], cryostatLogic, cryostatPhysical);
+		GeoManager::Get()->Add( names[i], cryostatLogic, cryostatPhysical);
 	}
 }
 
@@ -61,9 +62,9 @@ void GeoCryostat::ConstructColdParts(){
 	for(int ih=0; ih<nDrillSizes; ih++){
 		drills[ih] = new G4Tubs( name+"Drill",
 								0, 
-								GeoManager::Get()->GetDrillChart()[ih],
+								(*GeoManager::Get()->GetDrillChart())[ih],
 								GeoManager::Get()->GetDimensions("maxPlateThickness")/2,//make sure to drill through all plates.
-								0, 2*MY_PI);
+								0, 2*M_PI);
 	}
 	//Plate with holes
 	for(int ip=0; ip<GeoManager::Get()->GetNumberOfCryoPlates(); ip++){
@@ -72,16 +73,16 @@ void GeoCryostat::ConstructColdParts(){
 									0, 
 									GeoManager::Get()->GetCryoPlateR(ip),
 									GeoManager::Get()->GetCryoPlateH(ip)/2,
-									0, 2*MY_PI);
+									0, 2*M_PI);
 		G4VSolid* plateWithHoles = plate;
 		auto holes = GeoManager::Get()->GetCryoPlateHoles(ip);
 		//drill holes
 		for(auto ih = holes->begin(); ih != holes->end(); ++ih){
 			plateWithHoles = new G4SubtractionSolid( name+plateName,
 													plateWithHoles, 
-													drills[it->first],
+													drills[ih->first],
 													0,
-													it->second,
+													ih->second
 													);
 		}
 		G4LogicalVolume * plateLogic = new G4LogicalVolume( plateWithHoles,
@@ -99,13 +100,13 @@ void GeoCryostat::ConstructColdParts(){
 								plateLogic, platePhysical);
 	}
 	//Support beams
-	for(int ib=0; ib<GeoManager::Get()->GetNumberOfCryoBeams(); ip++){
-		G4String beamName = GeoManager::Get()->GetCryoBeamName(ip);
+	for(int ib=0; ib<GeoManager::Get()->GetNumberOfCryoBeams(); ib++){
+		G4String beamName = GeoManager::Get()->GetCryoBeamName(ib);
 		G4Tubs* beam = new G4Tubs( name+beamName,
 									GeoManager::Get()->GetCryoBeamRI(ib),
 									GeoManager::Get()->GetCryoBeamRO(ib),
 									GeoManager::Get()->GetCryoBeamL(ib)/2,
-									0, 2*MY_PI);
+									0, 2*M_PI);
 		G4LogicalVolume * beamLogic = new G4LogicalVolume( beam,
 									GeoManager::Get()->GetCryoBeamMaterial(ib),
 									name+beamName+"LV");
@@ -125,7 +126,7 @@ void GeoCryostat::ConstructColdParts(){
 									GeoManager::Get()->GetDimensions("MXCWallInnerRadius"),
 									GeoManager::Get()->GetDimensions("MXCWallOuterRadius"),
 									GeoManager::Get()->GetDimensions("MXCWallHeight")/2,
-									0, 2*MY_PI);
+									0, 2*M_PI);
 	G4LogicalVolume * MXCWallLogic = new G4LogicalVolume( MXCWallTubs, 
 									GeoManager::Get()->GetMaterial("Cu"),
 									name+"MXCWallLV");
@@ -137,6 +138,8 @@ void GeoCryostat::ConstructColdParts(){
 									false,
 									0,
 									fCheckOverlaps);
+	GeoManager::Get()->Add( name+"MXCWall",
+								MXCWallLogic, MXCWallPhysical);
 	
 }
 

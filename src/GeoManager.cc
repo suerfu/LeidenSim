@@ -20,12 +20,6 @@ GeoManager* GeoManager::Get(){
 	if (!me){
 	  me = new GeoManager();
 	}
-	if (!fDimensionsLoaded){
-	// Load dimensions later after SetDimensionFiles() is called!
-	// Make sure the dimension file names are passed by GeometryConstructionMessenger 
-	// then SetDimensionFiles() is called BEFORE geometry construction!
-		LoadDimensions();
-	}
 	return me;
 }
 
@@ -99,7 +93,7 @@ G4double*  GeoManager::GetCryostatCoordinateZ(int ithLayer){
 
 //Plates in code stages
 G4String  GeoManager::GetCryoPlateName(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
 		return "N.A.";
 	}else{
@@ -107,48 +101,48 @@ G4String  GeoManager::GetCryoPlateName(int ip){
 	}
 }
 G4Material*  GeoManager::GetCryoPlateMaterial(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return NULL;
 	}else{
 		return fCryoPlates[ip].material;
 	}
 }
 G4double  GeoManager::GetCryoPlateR(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoPlates[ip].r;
 	}
 }
 G4double  GeoManager::GetCryoPlateH(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoPlates[ip].thickness;
 	}
 }
 G4double  GeoManager::GetCryoPlateZ(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoPlates[ip].z;
 	}
 }
 std::vector< std::pair<G4int, G4ThreeVector> >*  GeoManager::GetCryoPlateHoles(int ip){
-	if(ip<0||ip>fCryoPlates.size()){
+	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return NULL;
 	}else{
 		return fCryoPlates[ip].holes;
 	}
 }
 //Beams in cold stages
 G4String  GeoManager::GetCryoBeamName(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
 		return "N.A.";
 	}else{
@@ -156,41 +150,41 @@ G4String  GeoManager::GetCryoBeamName(int ib){
 	}
 }
 G4Material*  GeoManager::GetCryoBeamMaterial(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return NULL;
 	}else{
 		return fCryoBeams[ib].material;
 	}
 }
 G4double  GeoManager::GetCryoBeamRI(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoBeams[ib].rI;
 	}
 }
 G4double  GeoManager::GetCryoBeamRO(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoBeams[ib].rO;
 	}
 }
 G4double  GeoManager::GetCryoBeamL(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return -1;
 	}else{
 		return fCryoBeams[ib].l;
 	}
 }
 G4ThreeVector  GeoManager::GetCryoBeamPos(int ib){
-	if(ib<0||ib>fCryoBeams.size()){
+	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return "N.A.";
+		return G4ThreeVector(0,0,0);
 	}else{
 		return fCryoBeams[ib].pos;
 	}
@@ -280,22 +274,22 @@ void GeoManager::LoadCryoPlate(){
 	fDrillChart = new std::vector<G4double>;
 	std::ifstream cryoPlateFile(fCryoPlateFile, std::ifstream::in);
 	char temp[256];
-	cryoPlateFile.getLine(temp, 256);
-	cryoPlateFile.getLine(temp, 256);
+	cryoPlateFile.getline(temp, 256);
+	cryoPlateFile.getline(temp, 256);
 	//drill charge on line 3
-	cryoPlateFile.getLine(temp, 256);
+	cryoPlateFile.getline(temp, 256);
 	TString drillChart(temp+1);//remove the # in the first position.
-	TString drill;
+	TString drillRToken;
 	Ssiz_t from = 0;
-	while(drillChart.Tokenize(drill, from, " ")){
-		G4double drillR = drill.Atof()*mm;
+	while(drillChart.Tokenize(drillRToken, from, " ")){
+		G4double drillR = drillRToken.Atof()*mm;
 		fDrillChart->push_back(drillR);
 	}
 	cryoPlateFile.close();
 
 	TTree *tCP = new TTree("tCP", "Plates in Cryostat");
 	tCP->ReadFile(fCryoPlateFile, "name/C:r/D:thickness/D:z/D:material/C:nHoles/I:xhole[6]/D:yhole[6]/D:drill[6]/I");
-	string name, material;
+	std::string name, material;
 	double r, thickness, z, x[6], y[6];
 	int nHoles, drill[6];
 	tCP->SetBranchAddress("name", &name);
@@ -329,14 +323,14 @@ void GeoManager::LoadCryoPlate(){
 void GeoManager::LoadCryoBeam(){
 	TTree *tCB = new TTree("tCB", "Beams in Cryostat");
 	tCB->ReadFile(fCryoBeamFile, "name/C:rO/D:rI/D:l/D:pos[3]/D:material/C");
-	string name, material;
+	std::string name, material;
 	double rO, rI, l, pos[3];
 	tCB->SetBranchAddress("name", &name);
 	tCB->SetBranchAddress("rI",    &rI);
 	tCB->SetBranchAddress("rO",    &rO);
 	tCB->SetBranchAddress("l",    &l);
 	tCB->SetBranchAddress("pos",  pos);
-	tCB->SetBranchAddress("material". &material);
+	tCB->SetBranchAddress("material", &material);
 	for(int i=0; i<tCB->GetEntries(); i++){
 		tCB->GetEntry(i);
 		CryoBeam beam;

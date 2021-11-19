@@ -1,7 +1,7 @@
 #ifndef GEOSHIELDING_H
 #define GEOSHIELDING_H 1
 
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 
 
 #include "G4ThreeVector.hh"

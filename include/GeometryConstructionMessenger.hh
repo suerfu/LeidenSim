@@ -10,6 +10,8 @@
 #include "G4UIcommand.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 
 class GeometryConstruction;
 class G4UIdirectory;
@@ -18,7 +20,7 @@ class G4UIcmdWithAString;
 class GeometryConstructionMessenger: public G4UImessenger{
 
 public:
-    GeometryConstructionMessenger( GeometryConstruction* );
+    GeometryConstructionMessenger();
     virtual ~GeometryConstructionMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
@@ -31,7 +33,7 @@ private:
 	G4UIcmdWithAString*   fDimensionFileCmd;
 	G4UIcmdWithAString*   fCryostatWallFileCmd;
 	G4UIcmdWithAString*   fCryoPlateFileCmd;
-	G4UIcmdWithAString*   fCryoBeamFile;
+	G4UIcmdWithAString*   fCryoBeamFileCmd;
    // G4UIcmdWith3VectorAndUnit* posCmd;
    //     // Command to specify position of the farside detector
    // G4UIcmdWithADoubleAndUnit* angCmd_x;

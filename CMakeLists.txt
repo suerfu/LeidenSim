@@ -57,6 +57,10 @@ set(VETO_SCRIPTS
   /macros/init_vis.mac
   /macros/vis.mac
   /macros/icons.mac
+  /config/geometry/cryoPlates_Ricochet.dat
+  /config/geometry/cryostatBeams_Ricochet.dat
+  /config/geometry/cryostatWall_Ricochet.dat
+  /config/geometry/dimensions_Ricochet.dat
   )
 
 foreach(_script ${VETO_SCRIPTS})
