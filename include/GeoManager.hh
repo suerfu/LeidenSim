@@ -12,6 +12,7 @@
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
+#include "G4RunManager.hh"
 
 using namespace CLHEP;
 
@@ -51,7 +52,8 @@ public:
 
 	//Cryostat walls
 	G4int     GetCryostatCoordinateNP(int ithLayer);
-	G4double* GetCryostatCoordinateR (int ithLayer);
+	G4double* GetCryostatCoordinateRI (int ithLayer);
+	G4double* GetCryostatCoordinateRO (int ithLayer);
 	G4double* GetCryostatCoordinateZ (int ithLayer);
 
 	//Plates in cold stages
@@ -71,6 +73,12 @@ public:
 	G4double GetCryoBeamRO(int ib);
 	G4double GetCryoBeamL(int ib);
 	G4ThreeVector GetCryoBeamPos(int ib);
+
+
+	void GeometryHasBeenModified(){
+		G4RunManager::GetRunManager()->GeometryHasBeenModified();
+	};
+
 
 
 
@@ -103,7 +111,8 @@ private:
 	//dimensions
 	//Polycone for crystat walls
 	G4int    fCryostatCoordinateNP[4];
-	G4double* fCryostatCoordinateR[4];
+	G4double* fCryostatCoordinateRI[4];
+	G4double* fCryostatCoordinateRO[4];
 	G4double* fCryostatCoordinateZ[4];
 	//Plates in cold stages
 	struct CryoPlate{

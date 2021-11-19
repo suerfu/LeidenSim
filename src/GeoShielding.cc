@@ -43,7 +43,7 @@ void GeoShielding::Construct(){
 	//SS Layer
 	//Basic solids
 	G4Tubs* cavityTubs = new G4Tubs( name+"Cavity", 0, cavityRadius, 
-											boxHeight, 
+											boxHeight/2, 
 											0, 2*M_PI);
     G4Box* SSBox = new G4Box( name+"SSBox", boxWidth/2, 
 											boxWidth/2, 

@@ -74,12 +74,20 @@ G4int  GeoManager::GetCryostatCoordinateNP(int ithLayer){
 		return fCryostatCoordinateNP[ithLayer];
 	}
 }
-G4double*  GeoManager::GetCryostatCoordinateR(int ithLayer){
+G4double*  GeoManager::GetCryostatCoordinateRI(int ithLayer){
 	if(ithLayer>=4){
 		G4cerr<<"Cryostat layer "<<ithLayer<<" not specified in data file!"<<G4endl;
 		return 0;
 	}else{
-		return fCryostatCoordinateR[ithLayer];
+		return fCryostatCoordinateRI[ithLayer];
+	}
+}
+G4double*  GeoManager::GetCryostatCoordinateRO(int ithLayer){
+	if(ithLayer>=4){
+		G4cerr<<"Cryostat layer "<<ithLayer<<" not specified in data file!"<<G4endl;
+		return 0;
+	}else{
+		return fCryostatCoordinateRO[ithLayer];
 	}
 }
 G4double*  GeoManager::GetCryostatCoordinateZ(int ithLayer){
@@ -256,21 +264,24 @@ void GeoManager::LoadDimensions(){
 void GeoManager::LoadCryoWalls(){
 	//Cryostat walls
 	TTree *tCW = new TTree("tCW", "Cryostat wall coordinates");
-	tCW->ReadFile(dimensionFiles["cryostatWallFile"], "z[4]/D:r[4]/D");
-	double z[4], r[4];
+	tCW->ReadFile(dimensionFiles["cryostatWallFile"], "z[4]/D:rI[4]/D:rO[4]/D");
+	double z[4], rI[4], rO[4];
 	tCW->SetBranchAddress("z",z);
-	tCW->SetBranchAddress("r",r);
+	tCW->SetBranchAddress("rI",rI);
+	tCW->SetBranchAddress("rO",rO);
 	for(int i=0; i<4; i++){
 		fCryostatCoordinateNP[i]=0;
-		fCryostatCoordinateR[i] = new G4double[tCW->GetEntries()];
+		fCryostatCoordinateRI[i] = new G4double[tCW->GetEntries()];
+		fCryostatCoordinateRO[i] = new G4double[tCW->GetEntries()];
 		fCryostatCoordinateZ[i] = new G4double[tCW->GetEntries()];
 	}
 	for(int ip=0; ip<tCW->GetEntries(); ip++){
 		tCW->GetEntry(ip);
 		for(int i=0; i<4; i++){
-			fCryostatCoordinateR[i][ip] = r[i]*mm;
+			fCryostatCoordinateRI[i][ip] = rI[i]*mm;
+			fCryostatCoordinateRO[i][ip] = rO[i]*mm;
 			fCryostatCoordinateZ[i][ip] = z[i]*mm;
-			if(r[i]<0&&fCryostatCoordinateNP[i]==0){
+			if(rI[i]<0&&fCryostatCoordinateNP[i]==0){
 				fCryostatCoordinateNP[i] = ip;
 			}
 		}

@@ -1,4 +1,8 @@
-
+/*
+    Author:  Burkhant Suerfu
+    Date:    November 18, 2021
+    Contact: suerfu@berkeley.edu
+*/
 // $Id: GeometryConstructionMessenger.cc $
 //
 /// \file GeometryConstructionMessenger.cc
@@ -73,13 +77,11 @@ GeometryConstructionMessenger::GeometryConstructionMessenger(GeometryConstructio
 }
 
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 GeometryConstructionMessenger::~GeometryConstructionMessenger(){
 //    delete FSDistanceCmd;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void GeometryConstructionMessenger::SetNewValue( G4UIcommand* command, G4String newValue) {
 	G4cout<<"GeometryConstructionMessenger::SetNewValue "<<newValue<<G4endl;

@@ -1,5 +1,6 @@
 # Macro file for the initialization of example B1
 # in interactive session
+#<<<<<<< HEAD
 
 #Set geometry
 /geometry/type 0
@@ -8,6 +9,9 @@
 /geometry/cryoPlateFile config/geometry/cryoPlates_Ricochet.dat
 /geometry/cryoBeamFile config/geometry/cryostatBeams_Ricochet.dat
 
+#=======
+#
+#>>>>>>> master
 # Set some default verbose
 /control/verbose 2
 /control/saveHistory
