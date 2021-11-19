@@ -111,7 +111,7 @@ private:
 		G4double r;
 		G4double thickness;
 		G4double z;
-		G4Material* material;
+		G4String material;
 		std::vector< std::pair<G4int, G4ThreeVector> >* holes;
 	};
 	std::vector< G4double > * fDrillChart;
@@ -123,7 +123,7 @@ private:
 		G4double rO;//outer radius
 		G4double l;
 		G4ThreeVector pos;
-		G4Material* material;
+		G4String material;
 	};
 //FIXME copy constructor?? or vector of pointers??
 	std::vector<CryoBeam> fCryoBeams;

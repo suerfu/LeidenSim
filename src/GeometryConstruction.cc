@@ -77,7 +77,7 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
     G4LogicalVolume* world_lv = new G4LogicalVolume( world_solid, world_material, world_name+"_lv");
     G4VPhysicalVolume* world_pv = new G4PVPlacement( 0, G4ThreeVector(0,0,0), world_lv, world_name, 0, false, 0,fCheckOverlaps);
 
-    world_lv->SetVisAttributes( G4VisAttributes::Invisible );
+  //  world_lv->SetVisAttributes( G4VisAttributes::Invisible );
 
 	GeoManager::Get()->Add( world_name, world_lv, world_pv );
 
@@ -94,7 +94,7 @@ void GeometryConstruction::ConstructUserVolumes(){
 	GeoManager::Get()->LoadDimensions();
 	G4int geoType = GeoManager::Get()->GetGeometryType();
 	if(geoType==0){ //TESSERACT
-	G4cout<<"TESSERACT"<<G4endl;
+	        G4cout<<"TESSERACT"<<G4endl;
 			GeoShielding* TESSERACTShield = new GeoShielding();
 			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
 			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());

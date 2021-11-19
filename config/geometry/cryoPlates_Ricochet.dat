@@ -1,6 +1,6 @@
 #dimensions, holes, and position of any concentric disc shape volumes in cryostate. 
 #drill chart, radius [mm] (Please only append to the end of the next line! Don't change anything else)
-#2.5 3.5 5 10.5
+#2.5 3.5 5 10 10.5
 #No overlaps or containing realtions.
 #Z offset w.r.t shield cube center.
 #Maximum 6 holes! 

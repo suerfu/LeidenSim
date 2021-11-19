@@ -105,7 +105,7 @@ G4Material*  GeoManager::GetCryoPlateMaterial(int ip){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
 		return NULL;
 	}else{
-		return fCryoPlates[ip].material;
+		return GetMaterial(fCryoPlates[ip].material);
 	}
 }
 G4double  GeoManager::GetCryoPlateR(int ip){
@@ -154,7 +154,7 @@ G4Material*  GeoManager::GetCryoBeamMaterial(int ib){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
 		return NULL;
 	}else{
-		return fCryoBeams[ib].material;
+		return GetMaterial(fCryoBeams[ib].material);
 	}
 }
 G4double  GeoManager::GetCryoBeamRI(int ib){
@@ -207,6 +207,12 @@ void  GeoManager::DefineMaterials( ){
     G4Element* I = new G4Element( "Iodine", "I", z = 53., a = 127 * g/mole );
     NaI->AddElement(Na, natoms = 1);
     NaI->AddElement( I, natoms = 1);
+
+    G4Material* PE = new G4Material("PE", density = 2*g/cm3, ncomp=2);
+    G4Element* C = new G4Element( "Carbon", "C", z = 6.,  a = 12.01 * g/mole );
+    G4Element* H = new G4Element( "Hydrogen", "H", z = 1., a = 1.02 * g/mole );
+    PE->AddElement(C, natoms = 1);
+    PE->AddElement(H, natoms = 2);
 
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
@@ -313,7 +319,7 @@ void GeoManager::LoadCryoPlate(){
 		plate.r = r*mm;
 		plate.thickness = thickness*mm;
 		plate.z = z*mm;
-		plate.material = GetMaterial(G4String(material));
+		plate.material = G4String(material);
 		plate.holes = new std::vector< std::pair<G4int, G4ThreeVector> >;
 		for(int ih=0; ih<nHoles; ih++){
 			plate.holes->push_back( 
@@ -345,6 +351,7 @@ void GeoManager::LoadCryoBeam(){
 		beam.l = l*mm;
 		beam.pos = G4ThreeVector(pos[0]*mm, pos[1]*mm,pos[2]*mm);
 		fCryoBeams.push_back(beam);
+		beam.material = G4String(material);
 	}
 }
 

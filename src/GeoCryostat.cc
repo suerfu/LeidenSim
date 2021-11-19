@@ -27,9 +27,7 @@ void GeoCryostat::Construct(){
         return;
     }
 
-	getchar();
 	ConstructTanks();
-	getchar();
 	ConstructColdParts();
 }
 
@@ -72,15 +70,18 @@ void GeoCryostat::ConstructColdParts(){
 	//Plate with holes
 	for(int ip=0; ip<GeoManager::Get()->GetNumberOfCryoPlates(); ip++){
 		G4String plateName = GeoManager::Get()->GetCryoPlateName(ip);
+		G4cout<<plateName<<G4endl;
 		G4Tubs* plate = new G4Tubs( name+plateName, 
 									0, 
 									GeoManager::Get()->GetCryoPlateR(ip),
 									GeoManager::Get()->GetCryoPlateH(ip)/2,
 									0, 2*M_PI);
 		auto holes = GeoManager::Get()->GetCryoPlateHoles(ip);
+		G4cout<<holes->size()<<" holes"<<G4endl;
 		//drill holes
 		G4MultiUnion* holeUnion = new G4MultiUnion( name+plateName+"holes");
 		for(auto ih = holes->begin(); ih != holes->end(); ++ih){
+			G4cout<<"drill with OD "<<drills[ih->first]->GetOuterRadius()<<" at "<<ih->second.x()<<","<<ih->second.y()<<G4endl;
 			G4Transform3D trans(G4RotationMatrix(), ih->second);
 			holeUnion->AddNode((*drills[ih->first]), trans);
 		}
@@ -104,6 +105,7 @@ void GeoCryostat::ConstructColdParts(){
 		GeoManager::Get()->Add( name+plateName,
 								plateLogic, platePhysical);
 	}
+	G4cout<<"plates done"<<G4endl;
 	//Support beams
 	for(int ib=0; ib<GeoManager::Get()->GetNumberOfCryoBeams(); ib++){
 		G4String beamName = GeoManager::Get()->GetCryoBeamName(ib);
