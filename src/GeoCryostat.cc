@@ -5,6 +5,7 @@
 #include "G4Tubs.hh"
 #include "G4Polycone.hh"
 #include "G4VSolid.hh"
+#include "G4MultiUnion.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
@@ -26,7 +27,9 @@ void GeoCryostat::Construct(){
         return;
     }
 
+	getchar();
 	ConstructTanks();
+	getchar();
 	ConstructColdParts();
 }
 
@@ -74,17 +77,19 @@ void GeoCryostat::ConstructColdParts(){
 									GeoManager::Get()->GetCryoPlateR(ip),
 									GeoManager::Get()->GetCryoPlateH(ip)/2,
 									0, 2*M_PI);
-		G4VSolid* plateWithHoles = plate;
 		auto holes = GeoManager::Get()->GetCryoPlateHoles(ip);
 		//drill holes
+		G4MultiUnion* holeUnion = new G4MultiUnion( name+plateName+"holes");
 		for(auto ih = holes->begin(); ih != holes->end(); ++ih){
-			plateWithHoles = new G4SubtractionSolid( name+plateName,
-													plateWithHoles, 
-													drills[ih->first],
-													0,
-													ih->second
-													);
+			G4Transform3D trans(G4RotationMatrix(), ih->second);
+			holeUnion->AddNode((*drills[ih->first]), trans);
 		}
+		G4VSolid* plateWithHoles = new G4SubtractionSolid( name+plateName,
+												plate,
+												holeUnion,
+												0,
+												G4ThreeVector(0,0,0)
+												);
 		G4LogicalVolume * plateLogic = new G4LogicalVolume( plateWithHoles,
 													GeoManager::Get()->GetCryoPlateMaterial(ip),
 													name+plateName+"LV");

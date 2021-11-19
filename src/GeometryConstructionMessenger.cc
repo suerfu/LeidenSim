@@ -11,7 +11,8 @@
 #include "G4UIcmdWithAString.hh"
 #include "GeoManager.hh"
 
-GeometryConstructionMessenger::GeometryConstructionMessenger() : G4UImessenger(){
+GeometryConstructionMessenger::GeometryConstructionMessenger(GeometryConstruction* det) : G4UImessenger(){
+	detector = det;
     directory = new G4UIdirectory( "/geometry/" );
     directory->SetGuidance( "Set geometry type and path to dimension files" );
 
@@ -81,8 +82,10 @@ GeometryConstructionMessenger::~GeometryConstructionMessenger(){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void GeometryConstructionMessenger::SetNewValue( G4UIcommand* command, G4String newValue) {
+	G4cout<<"GeometryConstructionMessenger::SetNewValue "<<newValue<<G4endl;
 	if( command == fGeoTypeCmd){
 		GeoManager::Get()->SetGeometryType(fGeoTypeCmd->ConvertToInt(newValue));
+		G4cout<<"Detector configuration is " <<GeoManager::Get()->GetGeometryType()<<G4endl;
 	}
 	else if( command==fDimensionFileCmd ){
 		GeoManager::Get()->SetFilePath("dimensionFile", newValue);

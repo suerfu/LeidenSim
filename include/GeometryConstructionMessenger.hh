@@ -12,6 +12,7 @@
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "GeometryConstruction.hh"
 
 class GeometryConstruction;
 class G4UIdirectory;
@@ -20,13 +21,13 @@ class G4UIcmdWithAString;
 class GeometryConstructionMessenger: public G4UImessenger{
 
 public:
-    GeometryConstructionMessenger();
+    GeometryConstructionMessenger(GeometryConstruction* det);
     virtual ~GeometryConstructionMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
 
 private:
-   // GeometryConstruction* detector;
+    GeometryConstruction* detector;
 
     G4UIdirectory* directory;
 	G4UIcmdWithAnInteger* fGeoTypeCmd;

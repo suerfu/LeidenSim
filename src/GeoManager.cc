@@ -218,13 +218,18 @@ void GeoManager::LoadDimensions(){
 	if(fDimensionsLoaded){
 		return;
 	}
+	G4cout<<"Loading geometry from"<<G4endl;
+	G4cout<<dimensionFiles["dimensionFile"]<<G4endl;
+	G4cout<<dimensionFiles["cryostatWallFile"]<<G4endl;
+	G4cout<<dimensionFiles["cryoPlateFile"]<<G4endl;
+	G4cout<<dimensionFiles["cryoBeamFile"]<<G4endl;
 
 	//General dimensions
 	TTree *t = new TTree("tDimension","General Dimensions");
-	t->ReadFile(fDimensionFile, "name/C:dim/D");
-	std::string name;
+	t->ReadFile(dimensionFiles["dimensionFile"], "name/C:dim/D");
+	char name[256];
 	double dim;
-	t->SetBranchAddress("name", &name);
+	t->SetBranchAddress("name", name);
 	t->SetBranchAddress("dim", &dim);
 	for(int i=0; i<t->GetEntries(); i++){
 		t->GetEntry(i);
@@ -245,7 +250,7 @@ void GeoManager::LoadDimensions(){
 void GeoManager::LoadCryoWalls(){
 	//Cryostat walls
 	TTree *tCW = new TTree("tCW", "Cryostat wall coordinates");
-	tCW->ReadFile(fCryostatWallFile, "z[4]/D:r[4]/D");
+	tCW->ReadFile(dimensionFiles["cryostatWallFile"], "z[4]/D:r[4]/D");
 	double z[4], r[4];
 	tCW->SetBranchAddress("z",z);
 	tCW->SetBranchAddress("r",r);
@@ -272,7 +277,7 @@ void GeoManager::LoadCryoWalls(){
 void GeoManager::LoadCryoPlate(){
 	//first load drill chart
 	fDrillChart = new std::vector<G4double>;
-	std::ifstream cryoPlateFile(fCryoPlateFile, std::ifstream::in);
+	std::ifstream cryoPlateFile(dimensionFiles["cryoPlateFile"], std::ifstream::in);
 	char temp[256];
 	cryoPlateFile.getline(temp, 256);
 	cryoPlateFile.getline(temp, 256);
@@ -288,15 +293,15 @@ void GeoManager::LoadCryoPlate(){
 	cryoPlateFile.close();
 
 	TTree *tCP = new TTree("tCP", "Plates in Cryostat");
-	tCP->ReadFile(fCryoPlateFile, "name/C:r/D:thickness/D:z/D:material/C:nHoles/I:xhole[6]/D:yhole[6]/D:drill[6]/I");
-	std::string name, material;
+	tCP->ReadFile(dimensionFiles["cryoPlateFile"], "name/C:r/D:thickness/D:z/D:material/C:nHoles/I:xhole[6]/D:yhole[6]/D:drill[6]/I");
+	char name[256], material[256];
 	double r, thickness, z, x[6], y[6];
 	int nHoles, drill[6];
-	tCP->SetBranchAddress("name", &name);
+	tCP->SetBranchAddress("name", name);
 	tCP->SetBranchAddress("r",    &r);
 	tCP->SetBranchAddress("thickness", &thickness);
 	tCP->SetBranchAddress("z",    &z);
-	tCP->SetBranchAddress("material", &material);
+	tCP->SetBranchAddress("material", material);
 	tCP->SetBranchAddress("nHoles",&nHoles);
 	tCP->SetBranchAddress("xhole", x);
 	tCP->SetBranchAddress("yhole", y);
@@ -322,15 +327,15 @@ void GeoManager::LoadCryoPlate(){
 
 void GeoManager::LoadCryoBeam(){
 	TTree *tCB = new TTree("tCB", "Beams in Cryostat");
-	tCB->ReadFile(fCryoBeamFile, "name/C:rO/D:rI/D:l/D:pos[3]/D:material/C");
-	std::string name, material;
+	tCB->ReadFile(dimensionFiles["cryoBeamFile"], "name/C:rO/D:rI/D:l/D:pos[3]/D:material/C");
+	char name[256], material[256];
 	double rO, rI, l, pos[3];
-	tCB->SetBranchAddress("name", &name);
+	tCB->SetBranchAddress("name", name);
 	tCB->SetBranchAddress("rI",    &rI);
 	tCB->SetBranchAddress("rO",    &rO);
 	tCB->SetBranchAddress("l",    &l);
 	tCB->SetBranchAddress("pos",  pos);
-	tCB->SetBranchAddress("material", &material);
+	tCB->SetBranchAddress("material", material);
 	for(int i=0; i<tCB->GetEntries(); i++){
 		tCB->GetEntry(i);
 		CryoBeam beam;

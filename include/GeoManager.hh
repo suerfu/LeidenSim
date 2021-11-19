@@ -94,7 +94,7 @@ private:
 	// GeometryConstruction::ConstructUserVolume() calls the specific GeoXXX::Construct() according to this tag.
 	int  fGeometryType; 
 
-	G4String fDimensionFile, fCryostatWallFile, fCryoPlateFile, fCryoBeamFile;
+	//G4String fDimensionFile, fCryostatWallFile, fCryoPlateFile, fCryoBeamFile;
 	//Specifically, the special volumes
 	void LoadCryoWalls();
 	void LoadCryoPlate();

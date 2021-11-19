@@ -66,17 +66,20 @@ int main(int argc,char** argv){
     }
 
 
+	G4cout<<"Creating G4Run Manager"<<G4endl;
     G4RunManager * runManager = new G4RunManager();
 
 
     // Construct detector geometry
     //
+	G4cout<<"Creating geometry construction"<<G4endl;
     GeometryConstruction* detectorConstruction = new GeometryConstruction();
     runManager->SetUserInitialization( detectorConstruction );
 
 
     // Physics list
     //
+	G4cout<<"Creating physics list"<<G4endl;
     G4VModularPhysicsList* physicsList = new Shielding;
 /*
     // Configure Biasing
@@ -92,6 +95,7 @@ int main(int argc,char** argv){
 
     // Run action
     //
+	G4cout<<"Creating runAction"<<G4endl;
     RunAction* runAction = new RunAction( &cmdl );
     //runAction->SetOutputFileName( filename );
     //runAction->AddRandomSeeds( seeds, 2);
@@ -100,6 +104,7 @@ int main(int argc,char** argv){
 
     // Primary generator
     //
+	G4cout<<"Creating primary generator"<<G4endl;
     GeneratorAction* generatorAction = new GeneratorAction( runAction);
     runManager->SetUserAction( generatorAction );
 
@@ -107,6 +112,7 @@ int main(int argc,char** argv){
 
 
     // Event action
+	G4cout<<"Creating event Action"<<G4endl;
     EventAction* eventAction = new EventAction( runAction );
     runManager->SetUserAction( eventAction );
 
@@ -115,7 +121,9 @@ int main(int argc,char** argv){
     runManager->SetUserAction( new SteppingAction( runAction, eventAction, detectorConstruction ) );
     runManager->SetUserAction( new StackingAction( runAction, eventAction ) );
 
-    runManager->Initialize();
+	
+	G4cout<<"***********************Initialize run**********************"<<G4endl;
+    //runManager->Initialize();
     //detectorConstruction->CreateImportanceStore();
 
     G4VisManager* visManager = new G4VisExecutive;

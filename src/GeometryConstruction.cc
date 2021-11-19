@@ -37,7 +37,7 @@ GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction()
 
     fCheckOverlaps = true;
     //fDetectorMessenger = new GeometryConstructionMessenger(this);
-    fDetectorMessenger = new GeometryConstructionMessenger();
+    fDetectorMessenger = new GeometryConstructionMessenger(this);
 
     // Set default values for world.
     
@@ -94,6 +94,7 @@ void GeometryConstruction::ConstructUserVolumes(){
 	GeoManager::Get()->LoadDimensions();
 	G4int geoType = GeoManager::Get()->GetGeometryType();
 	if(geoType==0){ //TESSERACT
+	G4cout<<"TESSERACT"<<G4endl;
 			GeoShielding* TESSERACTShield = new GeoShielding();
 			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
 			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
@@ -105,6 +106,7 @@ void GeometryConstruction::ConstructUserVolumes(){
 	else{ 
 		G4cerr<<"GeometryConstruction:: Geometry Type"<<geoType<<" not defined!"<<G4endl;
 	}
+	G4cout<<"User volumes constructed!!!"<<G4endl;
 
 
  //   simple_cube->Construct();
