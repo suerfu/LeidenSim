@@ -13,6 +13,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 #include "G4RunManager.hh"
+#include "G4Color.hh"
+#include "G4VisAttributes.hh"
 
 using namespace CLHEP;
 
@@ -60,7 +62,7 @@ public:
 	std::vector<G4double>*  GetDrillChart(){return fDrillChart;};
 	G4int  GetNumberOfCryoPlates(){return fCryoPlates.size();};
 	G4String  GetCryoPlateName(int ip);
-	G4Material* GetCryoPlateMaterial(int ip);
+	G4String GetCryoPlateMaterial(int ip);
 	G4double GetCryoPlateR(int ip);
 	G4double GetCryoPlateH(int ip);
 	G4double GetCryoPlateZ(int ip);
@@ -68,13 +70,14 @@ public:
 	//Beams in cold stages
 	G4int GetNumberOfCryoBeams(){return fCryoBeams.size();};
 	G4String  GetCryoBeamName(int ib);
-	G4Material* GetCryoBeamMaterial(int ib);
+	G4String GetCryoBeamMaterial(int ib);
 	G4double GetCryoBeamRI(int ib);
 	G4double GetCryoBeamRO(int ib);
 	G4double GetCryoBeamL(int ib);
 	G4ThreeVector GetCryoBeamPos(int ib);
 
 
+	void SetVisAttributes();
 	void GeometryHasBeenModified(){
 		G4RunManager::GetRunManager()->GeometryHasBeenModified();
 	};
@@ -88,6 +91,7 @@ private:
     std::map< G4String, std::pair<G4LogicalVolume*, G4VPhysicalVolume*> > dictionary;
 	std::map< G4String, G4double > dimensions;
 	std::map< G4String, G4String > dimensionFiles;
+	std::map< G4String,  G4Color > materialColor;
 	bool fCheckOverlaps;
 
 	//Load dimensions

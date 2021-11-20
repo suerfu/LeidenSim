@@ -54,6 +54,7 @@ G4NistManager* GeoManager::GetMaterialManager(){
 }
 
 G4Material* GeoManager::GetMaterial(G4String name){
+	G4cout<<"FindOrBuildMaterial "<<name<<G4endl;
     return material_man->FindOrBuildMaterial( name );
 }
 
@@ -108,12 +109,12 @@ G4String  GeoManager::GetCryoPlateName(int ip){
 		return fCryoPlates[ip].name;
 	}
 }
-G4Material*  GeoManager::GetCryoPlateMaterial(int ip){
+G4String  GeoManager::GetCryoPlateMaterial(int ip){
 	if(ip<0||ip>(int)fCryoPlates.size()){
 		G4cerr<<"Cryostat plate "<<ip<<" not specified in data file!"<<G4endl;
-		return NULL;
+		return "N.A.";
 	}else{
-		return GetMaterial(fCryoPlates[ip].material);
+		return fCryoPlates[ip].material;
 	}
 }
 G4double  GeoManager::GetCryoPlateR(int ip){
@@ -157,12 +158,12 @@ G4String  GeoManager::GetCryoBeamName(int ib){
 		return fCryoBeams[ib].name;
 	}
 }
-G4Material*  GeoManager::GetCryoBeamMaterial(int ib){
+G4String  GeoManager::GetCryoBeamMaterial(int ib){
 	if(ib<0||ib>(int)fCryoBeams.size()){
 		G4cerr<<"Cryostat beam "<<ib<<" not specified in data file!"<<G4endl;
-		return NULL;
+		return "N.A.";
 	}else{
-		return GetMaterial(fCryoBeams[ib].material);
+		return fCryoBeams[ib].material;
 	}
 }
 G4double  GeoManager::GetCryoBeamRI(int ib){
@@ -209,18 +210,49 @@ void  GeoManager::DefineMaterials( ){
     G4String symbol, name;
 
     G4Material* LHe = new G4Material("LHe", z=2., a= 4.00*g/mole, density= 0.141*g/cm3);
+	//Add color
+	materialColor["LHe"] = G4Color(1, 0.1, 1, 0.2);
 
     G4Material* NaI = new G4Material("NaI", density = 3.67*g/cm3, ncomp=2);
     G4Element* Na = new G4Element( "Sodium", "Na", z = 11., a = 23 * g/mole );
     G4Element* I = new G4Element( "Iodine", "I", z = 53., a = 127 * g/mole );
     NaI->AddElement(Na, natoms = 1);
     NaI->AddElement( I, natoms = 1);
+	materialColor["NaI"] = G4Color(0.1, 0.1, 1, 0.2);
 
-    G4Material* PE = new G4Material("PE", density = 2*g/cm3, ncomp=2);
+    G4Material* PE = new G4Material("PE", density = 0.96*g/cm3, ncomp=2);
     G4Element* C = new G4Element( "Carbon", "C", z = 6.,  a = 12.01 * g/mole );
     G4Element* H = new G4Element( "Hydrogen", "H", z = 1., a = 1.02 * g/mole );
     PE->AddElement(C, natoms = 1);
     PE->AddElement(H, natoms = 2);
+	materialColor["PE"] = G4Color(1, 1, 0.9, 0.2);
+
+	//SS 304
+    G4Material* SS = new G4Material("SS", density = 7.8*g/cm3, ncomp=4);
+    G4Element* Mn = new G4Element( "Manganese", "Mn", z = 25.,  a = 54.9 * g/mole );
+    G4Element* Cr = new G4Element( "Chromium", "Cr", z = 24., a = 52.0 * g/mole );
+    G4Element* Ni = new G4Element( "Nickel", "Ni", z = 28., a = 58.7 * g/mole );
+    G4Element* Fe = new G4Element( "Iron", "Fe", z = 26., a = 55.8 * g/mole );
+    SS->AddElement(Fe, 0.70);
+    SS->AddElement(Mn, 0.02); //mass fraction
+	SS->AddElement(Cr, 0.18);
+	SS->AddElement(Ni, 0.10);
+	materialColor["SS"] = G4Color(0.5, 0.5, 0.9, 0.2);
+	
+    G4Material* Cu = new G4Material("Cu", density = 8.96*g/cm3, ncomp=1);
+    G4Element* CuElement = new G4Element( "Copper", "Cu", z = 29.,  a = 63.5 * g/mole );
+    Cu->AddElement(CuElement, natoms = 1);
+	materialColor["Cu"] = G4Color(1, 0.1, 0.1, 0.2);
+
+    G4Material* Pb = new G4Material("Pb", density = 11.29*g/cm3, ncomp=1);
+    G4Element* PbElement = new G4Element( "Lead", "Pb", z = 82.,  a = 207.2 * g/mole );
+    Pb->AddElement(PbElement, natoms = 1);
+	materialColor["Pb"] = G4Color(0.1, 0.1, 0.1, 0.2);
+
+    G4Material* Ti = new G4Material("Ti", density = 11.29*g/cm3, ncomp=1);
+    G4Element* TiElement = new G4Element( "Titanium", "Ti", z = 22.,  a = 47.9 * g/mole );
+    Ti->AddElement(TiElement, natoms = 1);
+	materialColor["Ti"] = G4Color(0.1, 1, 0.1, 0.2);
 
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
@@ -361,12 +393,23 @@ void GeoManager::LoadCryoBeam(){
 		beam.rO = rO*mm;
 		beam.l = l*mm;
 		beam.pos = G4ThreeVector(pos[0]*mm, pos[1]*mm,pos[2]*mm);
-		fCryoBeams.push_back(beam);
 		beam.material = G4String(material);
+		fCryoBeams.push_back(beam);
 	}
 }
 
-
+void GeoManager::SetVisAttributes(){
+	G4cout<<"Set colors..."<<G4endl;
+	for(auto iter = dictionary.begin(); iter!=dictionary.end(); ++iter){
+		G4cout<<(iter->second.first)->GetName()<<G4endl;
+		G4cout<<(iter->second.first)->GetVisAttributes()<<G4endl;
+		G4cout<<" with material "<<(iter->second.first)->GetMaterial()->GetName()<<G4endl;
+		if((iter->second.first)->GetVisAttributes()==0){
+			G4Color color =  materialColor[(iter->second.first)->GetMaterial()->GetName()];
+			(iter->second.first)->SetVisAttributes(color);
+		}
+	}
+}
 
 
 

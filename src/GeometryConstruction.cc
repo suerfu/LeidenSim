@@ -83,6 +83,9 @@ G4VPhysicalVolume* GeometryConstruction::Construct(){
     /* Other user-defined geometries goes here */
     ConstructUserVolumes();
 
+	//set visualization attributes according to material.
+	GeoManager::Get()->SetVisAttributes();
+
     return world_pv;
 }
 
@@ -122,7 +125,7 @@ void GeometryConstruction::ConstructUserVolumes(){
 			GeoShielding* TESSERACTShield = new GeoShielding();
 			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
 			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
-		//	TESSERACTShield->Construct();
+			TESSERACTShield->Construct();
 			TESSERACTCryostat->Construct();
 	}
 	else if(geoType==1){ //other

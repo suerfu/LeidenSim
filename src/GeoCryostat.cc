@@ -45,7 +45,7 @@ void GeoCryostat::ConstructTanks(){
 		}
 		G4Polycone* cryostatSolid = new G4Polycone(names[i], 0, 2*M_PI, nP, z, rI, rO);
 		G4LogicalVolume* cryostatLogic = new G4LogicalVolume( cryostatSolid,
-																GeoManager::Get()->GetMaterial("Titanium"),
+																GeoManager::Get()->GetMaterial("Ti"),
 																names[i]+"LV");
 		G4VPhysicalVolume* cryostatPhysical = new G4PVPlacement(0,
 																G4ThreeVector(0,0,0),
@@ -102,7 +102,7 @@ void GeoCryostat::ConstructColdParts(){
 			plateWithHoles = plate;
 		}
 		G4LogicalVolume * plateLogic = new G4LogicalVolume( plateWithHoles,
-													GeoManager::Get()->GetCryoPlateMaterial(ip),
+													GeoManager::Get()->GetMaterial(GeoManager::Get()->GetCryoPlateMaterial(ip)),
 													name+plateName+"LV");
 		G4VPhysicalVolume* platePhysical = new G4PVPlacement(0,
 													G4ThreeVector(0,0,GeoManager::Get()->GetCryoPlateZ(ip)),
@@ -126,7 +126,7 @@ void GeoCryostat::ConstructColdParts(){
 									GeoManager::Get()->GetCryoBeamL(ib)/2,
 									0, 2*M_PI);
 		G4LogicalVolume * beamLogic = new G4LogicalVolume( beam,
-									GeoManager::Get()->GetCryoBeamMaterial(ib),
+									GeoManager::Get()->GetMaterial(GeoManager::Get()->GetCryoBeamMaterial(ib)),
 									name+beamName+"LV");
 		G4VPhysicalVolume* beamPhysical = new G4PVPlacement(0,
 									GeoManager::Get()->GetCryoBeamPos(ib),

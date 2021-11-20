@@ -5,8 +5,8 @@ longBeam1 2.5   0    810   112.583 65 547.5 SS
 longBeam2 2.5   0    810  -112.583 65 547.5 SS
 longBeam3 2.5   0    810     0   -130 547.5 SS
 shortBeam1 2.5  0    150    51.962 30 617.5 Cu
-shortBeam1 2.5  0    150   -51.962 30 617.5 Cu
-shortBeam1 2.5  0    150     0    -60 617.5 Cu
+shortBeam2 2.5  0    150   -51.962 30 617.5 Cu
+shortBeam3 2.5  0    150     0    -60 617.5 Cu
 MXCBeam1   2.5  0    242.5  34.641 20 193.75 Cu
 MXCBeam2   2.5  0    242.5 -34.641 20 193.75 Cu
 MXCBeam3   2.5  0    242.5   0    -40 193.75 Cu
