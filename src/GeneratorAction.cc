@@ -24,9 +24,9 @@
 
 
 
-GeneratorAction::GeneratorAction( RunAction* runAction, GeometryManager* gManager) : G4VUserPrimaryGeneratorAction(),
-    fRunAction( runAction),
-    fGeometryManager( gManager) {
+GeneratorAction::GeneratorAction( RunAction* runAction) : G4VUserPrimaryGeneratorAction(),
+    fRunAction( runAction)
+{
     
     fCmdlArgs = fRunAction->GetCommandlineArguments();
 

@@ -15,7 +15,7 @@
 
 #include "G4RunManager.hh"
 
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 #include "GeometryConstruction.hh"
 
 #include "GeneratorAction.hh"
@@ -77,14 +77,15 @@ int main( int argc, char** argv ){
     // Construct detector geometry
     // GeometryManager is simply a central place to obtain information regarding the geometries and materials used in this program.
     //
-    GeometryManager* geometryManager = new GeometryManager();
-    GeometryConstruction* detectorConstruction = new GeometryConstruction( geometryManager );
+	G4cout<<"Creating geometry construction"<<G4endl;
+    GeometryConstruction* detectorConstruction = new GeometryConstruction();
     runManager->SetUserInitialization( detectorConstruction );
 
 
     // Physics list
     // For now, simply use the shielding physics list. This may be changed in the future for more customization.
     //
+	G4cout<<"Creating physics list"<<G4endl;
     G4VModularPhysicsList* physicsList = new Shielding;
 
 /*
@@ -102,17 +103,20 @@ int main( int argc, char** argv ){
 
     // Run action
     //
+	G4cout<<"Creating runAction"<<G4endl;
     RunAction* runAction = new RunAction( &cmdl );
     runManager->SetUserAction( runAction );
 
 
     // Primary generator
     //
-    GeneratorAction* generatorAction = new GeneratorAction( runAction, geometryManager );
+	G4cout<<"Creating primary generator"<<G4endl;
+    GeneratorAction* generatorAction = new GeneratorAction( runAction);
     runManager->SetUserAction( generatorAction );
 
 
     // Event action
+	G4cout<<"Creating event Action"<<G4endl;
     //
     EventAction* eventAction = new EventAction( runAction );
     runManager->SetUserAction( eventAction );
@@ -129,7 +133,9 @@ int main( int argc, char** argv ){
     }
 
 
-    runManager->Initialize();
+	
+	G4cout<<"***********************Initialize run**********************"<<G4endl;
+    //runManager->Initialize();
     //detectorConstruction->CreateImportanceStore();
 
 

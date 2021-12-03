@@ -13,12 +13,32 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
+#include "GeoManager.hh"
 
-GeometryConstructionMessenger::GeometryConstructionMessenger( GeometryConstruction* placement) : G4UImessenger(), detector( placement ){
+GeometryConstructionMessenger::GeometryConstructionMessenger(GeometryConstruction* det) : G4UImessenger(){
+	detector = det;
+    directory = new G4UIdirectory( "/geometry/" );
+    directory->SetGuidance( "Set geometry type and path to dimension files" );
+
+	fGeoTypeCmd = new G4UIcmdWithAnInteger( "/geometry/type", this);
+	fGeoTypeCmd->SetGuidance( "Set the geometry type. \n"
+							  "0 -> TESSERACT detector with shielding, cryostat, and inner detector.\n"
+							  "     Further details are set by the choice of geometry dimension files.\n"
+							  "1 -> to be implemented");
+	fGeoTypeCmd->SetParameterName("type", true);
+	fGeoTypeCmd->SetDefaultValue(0);
+
+	fDimensionFileCmd = new G4UIcmdWithAString( "/geometry/dimensionFile", this);
+	fDimensionFileCmd->SetGuidance( "Dimension file path and name. Use this file to include dimension name, value pairs.\n"
+				"Consider including groups of dimensions for special geometries in seperate files.");
+	fCryostatWallFileCmd = new G4UIcmdWithAString( "/geometry/cryostatWallFile", this);
+	fCryostatWallFileCmd->SetGuidance( "TESSERACT cryostat wall profile file path and name" );
+	fCryoPlateFileCmd = new G4UIcmdWithAString( "/geometry/cryoPlateFile", this);
+	fCryoPlateFileCmd->SetGuidance( "TESSERACT cryostat inner plates with holes, file path and name" );
+	fCryoBeamFileCmd = new G4UIcmdWithAString( "/geometry/cryoBeamFile", this);
+	fCryoBeamFileCmd->SetGuidance( "TESSERACT cryostat inner beams, file path and name" );
+	
 /*
-    directory = new G4UIdirectory( "/placement/" );
-    directory->SetGuidance( "Far-side/backing detector placement." );
-
     posCmd = new G4UIcmdWith3VectorAndUnit( "/placement/pos", this);
     posCmd->SetGuidance( "Set the position of the farside detector to be placed.\nUnit is in cm by default.");
     posCmd->SetParameterName( "x", "y", "z", false );
@@ -64,6 +84,23 @@ GeometryConstructionMessenger::~GeometryConstructionMessenger(){
 
 
 void GeometryConstructionMessenger::SetNewValue( G4UIcommand* command, G4String newValue) {
+	G4cout<<"GeometryConstructionMessenger::SetNewValue "<<newValue<<G4endl;
+	if( command == fGeoTypeCmd){
+		GeoManager::Get()->SetGeometryType(fGeoTypeCmd->ConvertToInt(newValue));
+		G4cout<<"Detector configuration is " <<GeoManager::Get()->GetGeometryType()<<G4endl;
+	}
+	else if( command==fDimensionFileCmd ){
+		GeoManager::Get()->SetFilePath("dimensionFile", newValue);
+	}
+	else if( command==fCryostatWallFileCmd ){
+		GeoManager::Get()->SetFilePath("cryostatWallFile", newValue);
+	}
+	else if( command==fCryoPlateFileCmd ){
+		GeoManager::Get()->SetFilePath("cryoPlateFile", newValue);
+	}
+	else if( command==fCryoBeamFileCmd ){
+		GeoManager::Get()->SetFilePath("cryoBeamFile", newValue);
+	}
 /*
     if( command==posCmd ){
         detector->SetFarSidePosition( posCmd->GetNew3VectorValue( newValue ) );

@@ -8,7 +8,9 @@
 
 #include "G4VPhysicalVolume.hh"
 
-FarsideDetectorMessenger::FarsideDetectorMessenger( GeometryManager* gm ) : G4UImessenger(), fGeometryManager( gm ){
+#include "GeoManager.hh"
+
+FarsideDetectorMessenger::FarsideDetectorMessenger( /*GeometryManager* gm*/ ) : G4UImessenger(){//, fGeometryManager( gm ){
 
     name = "farside";
     dirname = G4String("/")+name+"/";
@@ -86,7 +88,7 @@ void FarsideDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newVa
         rot->rotateZ( angCmd_z->GetNewDoubleValue( newValue ) );
     }
     else if( command==placeCmd ){
-        G4VPhysicalVolume* pv = fGeometryManager->GetPhysicalVolume(newValue);
+        G4VPhysicalVolume* pv = GeoManager::Get()->GetPhysicalVolume(newValue);//fGeometryManager->GetPhysicalVolume(newValue);
         if( pv==0 ){
             G4cerr << "Detector with name " << newValue << " does not exists!" << G4endl;
             pos = G4ThreeVector(0,0,0);
@@ -98,7 +100,8 @@ void FarsideDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newVa
             pv->SetTranslation( pos );
             pos = G4ThreeVector(0,0,0);
             rot = 0;
-            fGeometryManager->GeometryHasBeenModified();
+			GeoManager::Get()->GeometryHasBeenModified();
+            //fGeometryManager->GeometryHasBeenModified();
         }
     }
     return;

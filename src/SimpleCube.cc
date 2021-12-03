@@ -13,7 +13,7 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4PVPlacement.hh"
 
-SimpleCube::SimpleCube( GeometryManager* g) : gman(g){
+SimpleCube::SimpleCube(){
 
     thisName = "target";
 
@@ -34,8 +34,8 @@ SimpleCube::~SimpleCube(){
 
 void SimpleCube::Construct(){
     
-    G4LogicalVolume* world_lv = gman->GetLogicalVolume("world");
-    if( world_lv==0 ){
+    G4LogicalVolume* motherLogic = GeoManager::Get()->GetLogicalVolume("world");
+    if( motherLogic==0 ){
         G4cerr << "Cannot find the logical volume of world." << G4endl;
         return;
     }
@@ -44,21 +44,29 @@ void SimpleCube::Construct(){
     G4Box* box2_solid = new G4Box( thisName+"2_solid", L_in/2, L_in/2, L_in/2);
     G4VSolid* box_solid = new G4SubtractionSolid("cube_solid", box1_solid, box2_solid);
 
-    G4Material* tungsten = gman->GetMaterial("G4_W");
+//<<<<<<< HEAD
+//    G4Material* tungsten = GeoManager::Get()->GetMaterial("G4_W");
+//    G4LogicalVolume* box_lv = new G4LogicalVolume( box_solid, tungsten, name+"_lv");
+//
+//    G4VPhysicalVolume* box_pv = new G4PVPlacement( 0, G4ThreeVector(0,0,0), box_lv, name, motherLogic, false, 0, fCheckOverlaps);
+//
+//	GeoManager::Get()->Add( name, box_lv, box_pv);
+//=======
+    G4Material* tungsten = GeoManager::Get()->GetMaterial("G4_W");
     G4LogicalVolume* box_lv = new G4LogicalVolume( box_solid, tungsten, thisName+"_lv");
 
-    new G4PVPlacement( 0, G4ThreeVector(0,0,0), box_lv, thisName, world_lv, false, 0, fCheckOverlaps);
+    new G4PVPlacement( 0, G4ThreeVector(0,0,0), box_lv, thisName, motherLogic, false, 0, fCheckOverlaps);
 
 }
 
 
 void SimpleCube::SetMaterial( G4String material_name ){
-    G4Material* material = gman->GetMaterial( material_name );
+    G4Material* material = GeoManager::Get()->GetMaterial( material_name );
     if( material!=0 ){
-        G4LogicalVolume* cube_lv = gman->GetLogicalVolume( thisName );
+        G4LogicalVolume* cube_lv = GeoManager::Get()->GetLogicalVolume( thisName );
         if( cube_lv ){
             cube_lv->SetMaterial( material );
-            gman->GeometryHasBeenModified();
+			GeoManager::Get()->GeometryHasBeenModified();
         }
     }
 }
@@ -66,10 +74,10 @@ void SimpleCube::SetMaterial( G4String material_name ){
 
 void SimpleCube::SetPosition( G4ThreeVector s){
     
-    G4VPhysicalVolume* cube_pv = gman->GetPhysicalVolume( thisName );
+    G4VPhysicalVolume* cube_pv = GeoManager::Get()->GetPhysicalVolume( thisName );
     if( cube_pv ){
         cube_pv->SetTranslation(s);
-        gman->GeometryHasBeenModified();
+		GeoManager::Get()->GeometryHasBeenModified();
     }
     
 }
@@ -77,7 +85,7 @@ void SimpleCube::SetPosition( G4ThreeVector s){
 
 void SimpleCube::RotateX( G4double a){
     
-    G4VPhysicalVolume* cube_pv = gman->GetPhysicalVolume( thisName );
+    G4VPhysicalVolume* cube_pv = GeoManager::Get()->GetPhysicalVolume( thisName );
 
     if( cube_pv ){
         G4RotationMatrix* rot = cube_pv->GetRotation();
@@ -88,14 +96,14 @@ void SimpleCube::RotateX( G4double a){
         rot->rotateX(a);
         cube_pv->SetRotation( rot );
 
-        gman->GeometryHasBeenModified();
+		GeoManager::Get()->GeometryHasBeenModified();
     }    
 }
 
 
 void SimpleCube::RotateY( G4double a){
     
-    G4VPhysicalVolume* cube_pv = gman->GetPhysicalVolume( thisName );
+    G4VPhysicalVolume* cube_pv = GeoManager::Get()->GetPhysicalVolume( thisName );
 
     if( cube_pv ){
         G4RotationMatrix* rot = cube_pv->GetRotation();
@@ -106,7 +114,7 @@ void SimpleCube::RotateY( G4double a){
         rot->rotateY(a);
         cube_pv->SetRotation( rot );
 
-        gman->GeometryHasBeenModified();
+		GeoManager::Get()->GeometryHasBeenModified();
     }
 }
 
@@ -114,7 +122,7 @@ void SimpleCube::RotateY( G4double a){
 void SimpleCube::RotateZ( G4double a){
 
     
-    G4VPhysicalVolume* cube_pv = gman->GetPhysicalVolume( thisName );
+    G4VPhysicalVolume* cube_pv = GeoManager::Get()->GetPhysicalVolume( thisName );
 
     if( cube_pv ){
         G4RotationMatrix* rot = cube_pv->GetRotation();
@@ -125,6 +133,7 @@ void SimpleCube::RotateZ( G4double a){
         rot->rotateZ(a);
         cube_pv->SetRotation( rot );
 
-        gman->GeometryHasBeenModified();
+		GeoManager::Get()->GeometryHasBeenModified();
     }
+//>>>>>>> master
 }

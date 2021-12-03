@@ -7,7 +7,7 @@
 #ifndef SIMPLECUBE_H
 #define SIMPLECUBE_H 1
 
-#include "GeometryManager.hh"
+#include "GeoManager.hh"
 
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
@@ -18,7 +18,7 @@ class SimpleCube{
 
 public:
 
-    SimpleCube( GeometryManager* gman);
+    SimpleCube();
     
     ~SimpleCube();
 
@@ -45,7 +45,6 @@ private:
 
     G4bool fCheckOverlaps;
 
-    GeometryManager* gman;
 };
 
 

@@ -11,11 +11,17 @@
 #define GEOMETRYCONSTRUCTION_H 1
 
 #include "G4VUserDetectorConstruction.hh"
-#include "GeometryManager.hh"
+//<<<<<<< HEAD
+#include "GeoManager.hh"
+//#include "RunAction.hh"
+
+//=======
+//#include "GeometryManager.hh"
 
 #include "SimpleCube.hh"
 #include "FarsideDetectorMessenger.hh"
 
+//>>>>>>> master
 #include "globals.hh"
 
 
@@ -30,7 +36,11 @@ class GeometryConstruction : public G4VUserDetectorConstruction{
 
 public:
 
-    GeometryConstruction( GeometryManager* man );
+//<<<<<<< HEAD
+    GeometryConstruction();
+//=======
+//    GeometryConstruction( GeometryManager* man );
+//>>>>>>> master
 
     virtual ~GeometryConstruction();
 
@@ -48,11 +58,17 @@ public:
 
 private:
 
-    GeometryManager* fGeometryManager;
+//<<<<<<< HEAD
+    //RunAction* fRunAction;
     GeometryConstructionMessenger* fDetectorMessenger;
+    
+//=======
+//    GeometryManager* fGeometryManager;
+//    GeometryConstructionMessenger* fDetectorMessenger;
 
     FarsideDetectorMessenger* fFarsideMessenger;
 
+//>>>>>>> master
     bool fCheckOverlaps;
 
     G4double world_x;

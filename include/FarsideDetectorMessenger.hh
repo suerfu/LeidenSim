@@ -19,7 +19,7 @@
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
 
-#include "GeometryManager.hh"
+//#include "GeometryManager.hh"
 
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
@@ -28,7 +28,7 @@ class FarsideDetectorMessenger: public G4UImessenger{
 
 public:
 
-    FarsideDetectorMessenger( GeometryManager* gm );
+    FarsideDetectorMessenger();// GeometryManager* gm );
 
     ~FarsideDetectorMessenger();
 
@@ -36,7 +36,7 @@ public:
 
 private:
 
-    GeometryManager* fGeometryManager;
+  //  GeometryManager* fGeometryManager;
 
     G4UIdirectory* directory;
     

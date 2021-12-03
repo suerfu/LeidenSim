@@ -11,13 +11,13 @@
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
 
-#include "GeometryManager.hh"
+//#include "GeometryManager.hh"
 
 class FarsideDetector{
 
 public:
     
-    FarsideDetector( GeometryManager* gm );
+    FarsideDetector();// GeometryManager* gm );
 
     ~FarsideDetector(){}
 
@@ -25,7 +25,7 @@ public:
 
 private:
 
-    GeometryManager* fGeometryManager;
+//    GeometryManager* fGeometryManager;
 
     G4double radius;
     G4double height;
