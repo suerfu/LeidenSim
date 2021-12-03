@@ -1,7 +1,7 @@
 #ifndef GEODETECTORSPICE_H
 #define GEODETECTORSPICE_H 1
 
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 
 class GeoDetectorSpice{

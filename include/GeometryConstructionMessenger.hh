@@ -17,11 +17,8 @@
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
-//<<<<<<< HEAD
 #include "G4UIcmdWithAnInteger.hh"
 #include "GeometryConstruction.hh"
-//=======
-//>>>>>>> master
 
 class GeometryConstruction;
 class G4UIdirectory;

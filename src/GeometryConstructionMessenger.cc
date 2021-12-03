@@ -13,7 +13,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 GeometryConstructionMessenger::GeometryConstructionMessenger(GeometryConstruction* det) : G4UImessenger(){
 	detector = det;
@@ -86,20 +86,20 @@ GeometryConstructionMessenger::~GeometryConstructionMessenger(){
 void GeometryConstructionMessenger::SetNewValue( G4UIcommand* command, G4String newValue) {
 	G4cout<<"GeometryConstructionMessenger::SetNewValue "<<newValue<<G4endl;
 	if( command == fGeoTypeCmd){
-		GeoManager::Get()->SetGeometryType(fGeoTypeCmd->ConvertToInt(newValue));
-		G4cout<<"Detector configuration is " <<GeoManager::Get()->GetGeometryType()<<G4endl;
+		GeometryManager::Get()->SetGeometryType(fGeoTypeCmd->ConvertToInt(newValue));
+		G4cout<<"Detector configuration is " <<GeometryManager::Get()->GetGeometryType()<<G4endl;
 	}
 	else if( command==fDimensionFileCmd ){
-		GeoManager::Get()->SetFilePath("dimensionFile", newValue);
+		GeometryManager::Get()->SetFilePath("dimensionFile", newValue);
 	}
 	else if( command==fCryostatWallFileCmd ){
-		GeoManager::Get()->SetFilePath("cryostatWallFile", newValue);
+		GeometryManager::Get()->SetFilePath("cryostatWallFile", newValue);
 	}
 	else if( command==fCryoPlateFileCmd ){
-		GeoManager::Get()->SetFilePath("cryoPlateFile", newValue);
+		GeometryManager::Get()->SetFilePath("cryoPlateFile", newValue);
 	}
 	else if( command==fCryoBeamFileCmd ){
-		GeoManager::Get()->SetFilePath("cryoBeamFile", newValue);
+		GeometryManager::Get()->SetFilePath("cryoBeamFile", newValue);
 	}
 /*
     if( command==posCmd ){

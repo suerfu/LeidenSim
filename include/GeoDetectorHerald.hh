@@ -1,7 +1,7 @@
 #ifndef GEODETECTORHERALD_H
 #define GEODETECTORHERALD_H 1
 
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 
 #include "G4ThreeVector.hh"

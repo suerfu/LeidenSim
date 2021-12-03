@@ -1,7 +1,7 @@
 #ifndef GEOCRYOSTAT_H
 #define GEOCRYOSTAT_H 1
 
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 
 #include "G4ThreeVector.hh"

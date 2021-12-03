@@ -7,7 +7,7 @@
 #ifndef SIMPLECUBE_H
 #define SIMPLECUBE_H 1
 
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 #include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"

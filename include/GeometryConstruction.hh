@@ -11,17 +11,10 @@
 #define GEOMETRYCONSTRUCTION_H 1
 
 #include "G4VUserDetectorConstruction.hh"
-//<<<<<<< HEAD
-#include "GeoManager.hh"
-//#include "RunAction.hh"
-
-//=======
 //#include "GeometryManager.hh"
-
-#include "SimpleCube.hh"
 #include "FarsideDetectorMessenger.hh"
 
-//>>>>>>> master
+#include "SimpleCube.hh"
 #include "globals.hh"
 
 
@@ -30,17 +23,11 @@ class GeometryConstructionMessenger;
 
 /// Detector construction class to define materials and geometry.
 
-
-
 class GeometryConstruction : public G4VUserDetectorConstruction{
 
 public:
 
-//<<<<<<< HEAD
     GeometryConstruction();
-//=======
-//    GeometryConstruction( GeometryManager* man );
-//>>>>>>> master
 
     virtual ~GeometryConstruction();
 
@@ -55,20 +42,11 @@ public:
 
     //G4VIStore* CreateImportanceStore();
 
-
 private:
 
-//<<<<<<< HEAD
-    //RunAction* fRunAction;
     GeometryConstructionMessenger* fDetectorMessenger;
-    
-//=======
-//    GeometryManager* fGeometryManager;
-//    GeometryConstructionMessenger* fDetectorMessenger;
-
     FarsideDetectorMessenger* fFarsideMessenger;
 
-//>>>>>>> master
     bool fCheckOverlaps;
 
     G4double world_x;
@@ -76,7 +54,6 @@ private:
     G4double world_z;
 
     SimpleCube* simple_cube;
-
 };
 
 

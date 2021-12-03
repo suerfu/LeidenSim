@@ -8,7 +8,7 @@
 #include "G4Tubs.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 FarsideDetector::FarsideDetector(){// GeometryManager* gm ) : fGeometryManager( gm ){
     radius = 5 * cm;
@@ -17,8 +17,8 @@ FarsideDetector::FarsideDetector(){// GeometryManager* gm ) : fGeometryManager( 
 
 void FarsideDetector::PlaceDetector( G4String name, G4ThreeVector pos, G4RotationMatrix* rot){
 
-    G4LogicalVolume* mother = GeoManager::Get()->GetLogicalVolume("world");//fGeometryManager->GetLogicalVolume("world");
-    G4Material* mat =  GeoManager::Get()->GetMaterial("G4_Pb");//fGeometryManager->GetMaterial( "G4_Pb" );
+    G4LogicalVolume* mother = GeometryManager::Get()->GetLogicalVolume("world");//fGeometryManager->GetLogicalVolume("world");
+    G4Material* mat =  GeometryManager::Get()->GetMaterial("G4_Pb");//fGeometryManager->GetMaterial( "G4_Pb" );
 
     if( mother!=0 && mat!=0 ){
         G4cout << "Building farside detector " << name << G4endl;

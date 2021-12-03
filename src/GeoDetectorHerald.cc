@@ -18,11 +18,10 @@ GeoDetectorHerald::GeoDetectorHerald(){
 
 void GeoDetectorHerald::Construct(){
     
-    G4LogicalVolume* motherLogic = GeoManager::Get()->GetLogicalVolume("world");
+    G4LogicalVolume* motherLogic = GeometryManager::Get()->GetLogicalVolume("world");
     if( motherLogic==0 ){
         G4cerr << "Cannot find the logical volume of world." << G4endl;
         return;
     }
 
-    //GeoManager::Get()->Add( name, box_lv, box_pv);
 }

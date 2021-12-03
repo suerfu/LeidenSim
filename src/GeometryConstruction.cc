@@ -11,14 +11,11 @@
 #include "G4SubtractionSolid.hh"
 
 #include "GeometryConstructionMessenger.hh"
-//<<<<<<< HEAD
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 #include "GeoShielding.hh"
 #include "GeoCryostat.hh"
-//=======
 #include "FarsideDetectorMessenger.hh"
 #include "FarsideDetector.hh"
-//>>>>>>> master
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -37,18 +34,10 @@
 
 
 
-//<<<<<<< HEAD
-GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction()
-{
-//=======
-//GeometryConstruction::GeometryConstruction( GeometryManager* gm) : G4VUserDetectorConstruction(),
-    
-//    fGeometryManager( gm ) {
-//>>>>>>> master
+GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction(){
 
     fCheckOverlaps = true;
-    //fDetectorMessenger = new GeometryConstructionMessenger(this);
-    fDetectorMessenger = new GeometryConstructionMessenger(this);
+    fDetectorMessenger = new GeometryConstructionMessenger( this );
 
     // Set default values for world.
     
@@ -56,13 +45,8 @@ GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction()
     world_y = 10.*m;
     world_z = 10.*m;
 
-//<<<<<<< HEAD
-  //  simple_cube = new SimpleCube( gm );
-//=======
-    simple_cube = new SimpleCube();// GeoManager::Get() );//gm );
-
-    fFarsideMessenger = new FarsideDetectorMessenger();// GeoManager:Get() );//gm );
-//>>>>>>> master
+    simple_cube = new SimpleCube();
+    fFarsideMessenger = new FarsideDetectorMessenger();
 }
 
 
@@ -84,7 +68,7 @@ G4VPhysicalVolume* GeometryConstruction::Construct(){
     ConstructUserVolumes();
 
 	//set visualization attributes according to material.
-	GeoManager::Get()->SetVisAttributes();
+	GeometryManager::Get()->SetVisAttributes();
 
     return world_pv;
 }
@@ -94,7 +78,7 @@ G4VPhysicalVolume* GeometryConstruction::Construct(){
 G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
     G4String world_name = "world";
-    G4Material* world_material = GeoManager::Get()->GetMaterial("G4_Galactic");//fGeometryManager->GetMaterial("G4_Galactic");
+    G4Material* world_material = GeometryManager::Get()->GetMaterial("G4_Galactic");//fGeometryManager->GetMaterial("G4_Galactic");
 
     G4Box* world_solid = new G4Box( world_name+"_sld", world_x/2.0, world_y/2.0, world_z/2.0);
     G4LogicalVolume* world_lv = new G4LogicalVolume( world_solid, world_material, world_name+"_lv");
@@ -102,23 +86,18 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
     world_lv->SetVisAttributes( G4VisAttributes::Invisible );
 
-//<<<<<<< HEAD
-	GeoManager::Get()->Add( world_name, world_lv, world_pv );
-
-//=======
-//>>>>>>> master
     return world_pv;
 }
 
 
 void GeometryConstruction::ConstructUserVolumes(){
 	G4cout<<"Construct user volumes..."<<G4endl;
-	// Load dimensions later after GeoManager::SetFilePath() is calledby GeometryConstructionMessenger 
+	// Load dimensions later after GeometryManager::SetFilePath() is calledby GeometryConstructionMessenger 
 	// Mark that we are ready to load dimensions!
-	GeoManager::Get()->GeometryTypeAndFilesSet();
+	GeometryManager::Get()->GeometryTypeAndFilesSet();
 	// Load dimension.
-	GeoManager::Get()->LoadDimensions();
-	G4int geoType = GeoManager::Get()->GetGeometryType();
+	GeometryManager::Get()->LoadDimensions();
+	G4int geoType = GeometryManager::Get()->GetGeometryType();
 	G4cout<<"geometry type is "<<geoType<<G4endl;
 	if(geoType==0){ //TESSERACT
 	        G4cout<<"TESSERACT"<<G4endl;

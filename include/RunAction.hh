@@ -43,8 +43,8 @@ public:
     virtual void EndOfRunAction( const G4Run* );
 
     /// Keep a record of the macro used for the run.
-    void AddMacro( G4String s){
-        macros.push_back( s );
+    void AddMacro( G4String a ){
+        macros.push_back( a );
     }
 
     TTree* GetDataTree();
