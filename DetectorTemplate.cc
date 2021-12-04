@@ -168,9 +168,10 @@ int main( int argc, char** argv ){
         if( visManager!=0 ){
             visManager->Initialize();
         }
-        UImanager->ApplyCommand("/control/execute macros/init_vis.mac");
+		UImanager->ApplyCommand("/control/macroPath macros");
+        UImanager->ApplyCommand("/control/execute init_vis.mac");
         if (ui->IsGUI()) {
-            UImanager->ApplyCommand("/control/execute macros/gui.mac");
+            UImanager->ApplyCommand("/control/execute gui.mac");
         }
         ui->SessionStart();
     }
