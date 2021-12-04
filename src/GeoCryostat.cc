@@ -91,6 +91,7 @@ void GeoCryostat::ConstructColdParts(){
 				G4Transform3D trans(G4RotationMatrix(), ih->second);
 				holeUnion->AddNode((*drills[ih->first]), trans);
 			}
+			holeUnion->Voxelize();
 			plateWithHoles = new G4SubtractionSolid( name+plateName,
 												plate,
 												holeUnion,

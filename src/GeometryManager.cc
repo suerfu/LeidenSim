@@ -20,6 +20,7 @@ GeometryManager* GeometryManager::Get(){
 
 GeometryManager::GeometryManager(){
     material_man = GetMaterialManager();
+	fCheckOverlaps = true;
     DefineMaterials();
 
 	fDimensionFilesSet = false;
