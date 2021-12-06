@@ -12,6 +12,7 @@ cmake ..
 make
 ```
 Note that one needs ROOT to run this application.
+*Add micros and config file names and pathes to CMakeLists.txt `set(SCRIPTS ...)`*
 
 ## Running the program
 The basic usage of this program is: executable [-option [argument(s)] ]
@@ -46,7 +47,15 @@ The default units are mm for length, ns for time and keV for energy.
 ## Custom Commands
 
 ### Geometry
-The current mock-up geometry is a cube target named *target* in the center of the world. The cube has an empty center, and is surrounded by a few farside detectors called *fsN* where N is a number starting from 0.
+Set geometry in the mac file before `/run/initialize`
+
+Structually different geometries can be set by 
+```
+/geometry/type int
+```
+Implemented types include
+- 0 : TESSERACT abstract geometry. Including shield, cryostat, and inner detector.
+- 1 : "Cubic cow". The mock-up geometry is a cube target named *target* in the center of the world. The cube has an empty center, and is surrounded by a few farside detectors called *fsN* where N is a number starting from 0.
 
 Available commands include 
 ```

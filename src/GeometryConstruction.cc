@@ -40,6 +40,7 @@ GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction(){
     fDetectorMessenger = new GeometryConstructionMessenger( this );
 
     // Set default values for world.
+	//FIXME! change to dimension of the experimental hall.
     
     world_x = 10.*m;
     world_y = 10.*m;
@@ -92,22 +93,29 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
 void GeometryConstruction::ConstructUserVolumes(){
 	G4cout<<"Construct user volumes..."<<G4endl;
-	// Load dimensions later after GeometryManager::SetFilePath() is calledby GeometryConstructionMessenger 
+	// At this point GeometryManager::SetFilePath() has been called by GeometryConstructionMessenger 
 	// Mark that we are ready to load dimensions!
 	GeometryManager::Get()->GeometryTypeAndFilesSet();
-	// Load dimension.
+	// Load dimensions. 
 	GeometryManager::Get()->LoadDimensions();
 	G4int geoType = GeometryManager::Get()->GetGeometryType();
 	G4cout<<"geometry type is "<<geoType<<G4endl;
+	
+	//Construct geometry.
+	//It is a good idea to use only one geoType tag to control major and sub types.
+	//It helps to avoid potentially conflicting user commends. 
 	if(geoType==0){ //TESSERACT
 	        G4cout<<"TESSERACT"<<G4endl;
+			//Each component is instantiated and constructed seperately.
 			GeoShielding* TESSERACTShield = new GeoShielding();
 			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
 			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
 			TESSERACTShield->Construct();
 			TESSERACTCryostat->Construct();
+			//FIXME! Add HERALD to another geoType. 
+			// detectorSPICE->Construct();
 	}
-	else if(geoType==1){ //other
+	else if(geoType==1){ //Cubic cow
 		simple_cube->Construct();
 
 		const int Nfs = 6;

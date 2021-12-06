@@ -15,7 +15,6 @@
 
 #include "G4RunManager.hh"
 
-#include "GeoManager.hh"
 #include "GeometryConstruction.hh"
 
 #include "GeneratorAction.hh"

@@ -19,7 +19,7 @@
 #include "G4Box.hh"
 #include "G4GeneralParticleSource.hh"
 
-#include "GeoManager.hh"
+#include "GeometryManager.hh"
 
 #include "RunAction.hh"
 

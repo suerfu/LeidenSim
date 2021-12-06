@@ -85,13 +85,16 @@ void GeoCryostat::ConstructColdParts(){
 		G4cout<<holes->size()<<" holes"<<G4endl;
 		if(int(holes->size())>0){
 			//drill holes
+			//Union of all holes
 			G4MultiUnion* holeUnion = new G4MultiUnion( name+plateName+"holes");
 			for(auto ih = holes->begin(); ih != holes->end(); ++ih){
 				G4cout<<"drill with OD "<<drills[ih->first]->GetOuterRadius()<<" at "<<ih->second.x()<<","<<ih->second.y()<<G4endl;
 				G4Transform3D trans(G4RotationMatrix(), ih->second);
 				holeUnion->AddNode((*drills[ih->first]), trans);
 			}
+			//Must voxelize unions!
 			holeUnion->Voxelize();
+			//drill
 			plateWithHoles = new G4SubtractionSolid( name+plateName,
 												plate,
 												holeUnion,

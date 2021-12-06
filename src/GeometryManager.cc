@@ -20,6 +20,7 @@ GeometryManager* GeometryManager::Get(){
 
 GeometryManager::GeometryManager(){
     material_man = GetMaterialManager();
+	//FIXME! add user commands 
 	fCheckOverlaps = true;
     DefineMaterials();
 
@@ -353,7 +354,7 @@ void GeometryManager::LoadCryoPlate(){
 	char temp[256];
 	cryoPlateFile.getline(temp, 256);
 	cryoPlateFile.getline(temp, 256);
-	//drill charge on line 3
+	//drill chart at line 3. Using TString::Tokenize to read the line.
 	cryoPlateFile.getline(temp, 256);
 	TString drillChart(temp+1);//remove the # in the first position.
 	TString drillRToken;
@@ -364,6 +365,7 @@ void GeometryManager::LoadCryoPlate(){
 	}
 	cryoPlateFile.close();
 
+	//Now load plate dimensions.
 	TTree *tCP = new TTree("tCP", "Plates in Cryostat");
 	tCP->ReadFile(dimensionFiles["cryoPlateFile"], "name/C:r/D:thickness/D:z/D:material/C:nHoles/I:xhole[6]/D:yhole[6]/D:drill[6]/I");
 	char name[256], material[256];

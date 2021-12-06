@@ -1,11 +1,11 @@
 #dimensions, holes, and position of any concentric disc shape volumes in cryostate. 
-#drill chart, radius [mm] (Please only append to the end of the next line! Don't change anything else)
+#drill chart, radius [mm] (Please only append to the end of the next line! Don't change anything else! Keep the drill chart at the 3rd line!)
 #2.5 3.5 5 10 10.5
 #No overlaps or containing realtions.
 #Z offset w.r.t shield cube center.
 #Maximum 6 holes! 
 #All dimensions in [mm]
-#name           r      thickness   z     material   nHoles   x[6]     y[6]    drill number[6]
+#name           r      thickness   z     material   nHoles   x[6]					   y[6]                    drill number[6]
 stillPlate      165.0  10          937.5    Cu      3        112.583 -112.583 0 0 0 0  65.0 65.0 -130.0 0 0 0  1 1 1 -1 -1 -1
 exchangerPlate  150.0  10          807.5    Cu      3        112.583 -112.583 0 0 0 0  65.0 65.0 -130.0 0 0 0  1 1 1 -1 -1 -1
 MXCPlate        150.0  10          677.5    Cu      6        112.583 -112.583 0 51.962 -51.962 0  65.0 65.0 -130.0 30 30 -60  1 1 1 0 0 0

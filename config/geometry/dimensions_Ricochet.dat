@@ -18,6 +18,7 @@ cavityOffset      450
 neckRadius        235
 #########Cryostat#########
 #Maximum plate thickness inside cryostat. This is a trick to make through holes in all plates.
+#Make sure the size is 10mm greater than the most thick plate.
 maxPlateThickness 110
 MXCWallInnerRadius 100
 MXCWallOuterRadius 150
