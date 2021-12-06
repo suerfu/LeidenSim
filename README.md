@@ -49,7 +49,7 @@ The default units are mm for length, ns for time and keV for energy.
 ### Geometry
 ***Set geometry in the mac file before `/run/initialize`***
 General dimensions and there names are stored in `config/geometry/dimensions_XX.dat`
-Set specific files with command
+Set files with command
 ```
 /geometry/dimensionFile config/geometry/dimensions_XX.dat
 ```
