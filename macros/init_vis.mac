@@ -2,8 +2,8 @@
 # in interactive session
 
 #Set geometry
-/geometry/dimensionFile config/geometry/dimensions_Ricochet.dat
 /geometry/type 0
+/geometry/dimensionFile config/geometry/dimensions_Ricochet.dat
 /geometry/cryostatWallFile config/geometry/cryostatWall_Ricochet.dat
 /geometry/cryoPlateFile config/geometry/cryoPlates_Ricochet.dat
 /geometry/cryoBeamFile config/geometry/cryostatBeams_Ricochet.dat
