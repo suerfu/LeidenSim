@@ -4,11 +4,11 @@
 This repository is a template and a framework for writing Geant4 code for detector simulation. The framework provides some basic functions such as parsing of commandline arguments, messenger classes to set parameters for geometries, GeneratorAction and RunAction. The program also outputs a ROOT file detailing stepwise information of all the particles simulated.
 
 ## Installation
-The code can be installed following the basic Geant4 application installation procedures. Within the project directory, execute
+The code can be installed following the basic Geant4 application installation procedures. At the root of the project directory `TesseractSim/`, execute
 ```
-mkdir build
-cd build
-cmake ..
+mkdir ../build
+cd ../build
+cmake ../TesseractSim
 make
 ```
 Note that one needs ROOT to run this application.
