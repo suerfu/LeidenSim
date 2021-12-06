@@ -47,17 +47,27 @@ The default units are mm for length, ns for time and keV for energy.
 ## Custom Commands
 
 ### Geometry
-Set geometry in the mac file before `/run/initialize`
-
+***Set geometry in the mac file before `/run/initialize`***
+General dimensions and there names are stored in `config/geometry/dimensions_XX.dat`
+Set specific files with command
+```
+/geometry/dimensionFile config/geometry/dimensions_XX.dat
+```
 Structually different geometries can be set by 
 ```
 /geometry/type int
 ```
 Implemented types include
 - 0 : TESSERACT abstract geometry. Including shield, cryostat, and inner detector.
+Dimensions of the geometries are stored under `config/geometry/`. New geometries should be add to new config files, follow the formats in each file. Dimensions to be implemented in a run are set by command
+```
+/geometry/cryostatWallFile config/geometry/cryostatWall_XX.dat
+/geometry/cryoPlateFile config/geometry/cryoPlates_XX.dat
+/geometry/cryoBeamFile config/geometry/cryoBeams_XX.dat
+```
 - 1 : "Cubic cow". The mock-up geometry is a cube target named *target* in the center of the world. The cube has an empty center, and is surrounded by a few farside detectors called *fsN* where N is a number starting from 0.
 
-Available commands include 
+Available commands for `type 1` include 
 ```
 /target/material materialName
 /target/pos x y z unit
