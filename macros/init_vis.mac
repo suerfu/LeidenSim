@@ -7,6 +7,10 @@
 /geometry/cryostatWallFile config/geometry/cryostatWall_Ricochet.dat
 /geometry/cryoPlateFile config/geometry/cryoPlates_Ricochet.dat
 /geometry/cryoBeamFile config/geometry/cryostatBeams_Ricochet.dat
+#/geometry/dimensionFile config/geometry/dimensions_Nucleus.dat
+#/geometry/cryostatWallFile config/geometry/cryostatWall_Nucleus.dat
+#/geometry/cryoPlateFile config/geometry/cryoPlates_Nucleus.dat
+#/geometry/cryoBeamFile config/geometry/cryostatBeams_Nucleus.dat
 
 # Set some default verbose
 /control/verbose 2

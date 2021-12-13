@@ -39,6 +39,7 @@ void GeoShielding::Construct(){
 	G4double cavityRadius = GeometryManager::Get()->GetDimensions("cavityRadius");
 	G4double cavityOffset = GeometryManager::Get()->GetDimensions("cavityOffset");
 	G4double neckRadius   = GeometryManager::Get()->GetDimensions("neckRadius");
+	G4double shieldZOffset= GeometryManager::Get()->GetDimensions("shieldZOffset");
 
 	//SS Layer
 	//Basic solids
@@ -57,7 +58,7 @@ void GeoShielding::Construct(){
 													name+"SSBoxLV");
 	//Placements
 	G4VPhysicalVolume* SSPhysical = new G4PVPlacement( 0, 
-													G4ThreeVector(0,0,0), 
+													G4ThreeVector(0,0, shieldZOffset), 
 													SSLogic, 
 													name+"SSBoxPhysical",
 													worldLogic,
@@ -72,7 +73,7 @@ void GeoShielding::Construct(){
 														GeometryManager::Get()->GetMaterial("SS"),
 														name+"NeckSSLV");
 		G4VPhysicalVolume* neckSSPhysical = new G4PVPlacement( 0, 
-														G4ThreeVector(0,0,boxHeight - SSThickness/2), 
+														G4ThreeVector(0,0,boxHeight/2 - SSThickness/2 + shieldZOffset), 
 														neckSSLogic, 
 														name+"neckSSPhysical",
 														worldLogic,
@@ -114,7 +115,7 @@ void GeoShielding::Construct(){
 														GeometryManager::Get()->GetMaterial("Pb"),
 														name+"NeckPbLV");
 		G4VPhysicalVolume* neckPbPhysical = new G4PVPlacement( 0, 
-														G4ThreeVector(0,0,boxHeight - PbThickness/2), 
+														G4ThreeVector(0,0,boxHeight/2 - PbThickness/2+ shieldZOffset), 
 														neckPbLogic, 
 														name+"neckPbPhysical",
 														worldLogic,
@@ -155,7 +156,7 @@ void GeoShielding::Construct(){
 														GeometryManager::Get()->GetMaterial("PE"),
 														name+"NeckPELV");
 		G4VPhysicalVolume* neckPEPhysical = new G4PVPlacement( 0, 
-														G4ThreeVector(0,0,boxHeight - PEThickness/2), 
+														G4ThreeVector(0,0,boxHeight/2 - PEThickness/2 + shieldZOffset), 
 														neckPELogic, 
 														name+"neckPEPhysical",
 														worldLogic,

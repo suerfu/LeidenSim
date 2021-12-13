@@ -61,6 +61,10 @@ set(SCRIPTS
   /config/geometry/cryostatBeams_Ricochet.dat
   /config/geometry/cryostatWall_Ricochet.dat
   /config/geometry/dimensions_Ricochet.dat
+  /config/geometry/cryoPlates_Nucleus.dat
+  /config/geometry/cryostatBeams_Nucleus.dat
+  /config/geometry/cryostatWall_Nucleus.dat
+  /config/geometry/dimensions_Nucleus.dat
   /macros/test.mac
   )
 

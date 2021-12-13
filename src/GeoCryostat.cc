@@ -149,7 +149,7 @@ void GeoCryostat::ConstructColdParts(){
 									GeometryManager::Get()->GetMaterial("Cu"),
 									name+"MXCWallLV");
 	G4VPhysicalVolume* MXCWallPhysical = new G4PVPlacement(0,
-									G4ThreeVector(0, 0, GeometryManager::Get()->GetDimensions("detectorZOffset")),
+									G4ThreeVector(0, 0, 0),//GeometryManager::Get()->GetDimensions("detectorZOffset")),
 									MXCWallLogic,
 									name + "MXCWallPhysical",
 									motherLogic,
