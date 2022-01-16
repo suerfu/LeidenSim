@@ -74,126 +74,74 @@ public:
 private:
 
     ParameterMap map;
+
 };
 
 
 int main( int argc, char* argv[]){ 
 
+    // Parse commandline arguments
+    //
     Commandline cmdl( argc, argv);
 
     if( cmdl.Size()==1 || cmdl.Find("-h") || cmdl.Find("--help") ){
         cout << "\nusage: " << argv[0] << "[--active x y z] --voi u v w --input f0.root f1.root ... --output foo.root\n\n";
         return 0;
     }
-/*
-    string output_name = argv[argc-1];
-    TFile* outfile = new TFile( output_name.c_str(), "NEW");
-    if( !outfile ){
-        cout << "Error creating file " << output_name << endl;
-        return -2;
+
+    // Check if necessary parameters have been specified.
+    //
+    if( cmdl.Find("--input")==false ){
+        cerr << "No input file found. Specify it with --input option..\n";
+        return -1;
+    }
+    if( cmdl.Find("--output")==false ){
+        cerr << "No output file name found. Specify it with --output option.\n";
+        return -1;
+    }
+    if( cmdl.Find("--active")==false ){
+        cerr << "No active volume found. Specify it with --active option.\n";
+        return -1;
+    }
+    if( cmdl.Find("--voi")==false ){
+        cerr << "No volume-of-interest found. Specify it with --voi option.\n";
+        return -1;
     }
 
-    TTree* tree = new TTree( "events", "MC simulation for Compton scattering");
-    EventInfo wdata;   // data for writing
+    // Define a number of variables
+    //
+    vector<string> inputFiles = cmdl.Get("--input");
+        // input files to be processed.
 
-    tree->Branch( "file", &wdata.file_name, "file[128]/C");
-    tree->Branch( "ID", &wdata.ID, "ID/I");
-    tree->Branch( "evtID", &wdata.evtID, "evtID/I");
-    tree->Branch( "Edep", &wdata.edep, "Edep/D" );
-    tree->Branch( "time", &wdata.time, "time/D");
+    string outputFile = cmdl.Get("--output")[0];
+        // output ROOT file for writing.
+
+    vector<string> activeVolumes = cmdl.Get("--active");
+        // active volume is used to find and group events.
+        // edep within DAQ window is grouped into an interaction.
+
+    vector<string> voi = cmdl.Get("--voi");
+        // edep in volumes of interest will be recorded.
+
+    // Print the above parameters so that user knows if the program is executing with the correct parameters.
+    //
+    cout << "Creating " << outputFile << " from";
+    for( vector<string>::iterator itr=inputFiles.begin(); itr!=inputFiles.end(); itr++ )
+        cout << " " << *itr;
+    cout << endl;
+
+    cout << "Energy deposits in";
+    for( vector<string>::iterator itr=activeVolumes.begin(); itr!=activeVolumes.end(); itr++ )
+        cout << " " << *itr;
+    cout << " will be used to find and cluster events.\n";
+
+    cout << "Energy deposits in";
+    for( vector<string>::iterator itr=voi.begin(); itr!=voi.end(); itr++ )
+        cout << " " << *itr;
+    cout << " will be recorded.\n";
+
     
 
-    // ************************** //
-    // * Process the input file * //
-    // ************************** //
-
-
-    for( int t = 1; t<argc-1; t++ ){
-
-        string filename( argv[t] );
-        TFile* infile = TFile::Open( filename.c_str(), "READ");
-
-        if( !infile ){
-            cout << "ERROR reading file " << filename << endl;
-        }
-        else{
-            cout << "Processing " << filename << endl;
-        }
-
-        strncpy( wdata.file_name, argv[t], 128);
-
-        TTree* events = (TTree*)infile->Get("events");
-        int nentries = events->GetEntries();
-
-        TrackInfo data;    // data for reading
-        events -> SetBranchAddress("eventID", &data.eventID);
-        events -> SetBranchAddress("trackID", &data.trackID);
-        events -> SetBranchAddress("parentID", &data.parentID);
-        events -> SetBranchAddress("particle", &data.particle_name);
-        events -> SetBranchAddress("volume", &data.volume_name);
-        events -> SetBranchAddress("Eki", &data.Eki);
-        events -> SetBranchAddress("Ekf", &data.Ekf);
-        events -> SetBranchAddress("Edep", &data.Edep);
-        events -> SetBranchAddress("t", &data.time);
-        events -> SetBranchAddress("process", &data.proc_name);
-
-
-        // ************************** //
-        // * Process the input file * //
-        // ************************** //
-
-        int evt_counter = -1;
-        for( unsigned int i=0; i<nentries; i++){
-            
-            events->GetEntry(i);
-
-            bool fillTree = false;
-
-            if(  ( strncmp( data.proc_name, "newEvent", 8)==0 ) )
-                fillTree = true;
-            else if(  ( strncmp( data.proc_name, "timeReset", 9)==0 ) )
-                fillTree = true;
-            else if(i==nentries-1 )
-                fillTree = true;
-            else if(  ( data.parentID==0 && strncmp( data.proc_name, "initStep", 8)==0 ) )
-                fillTree = true;
-
-            if( fillTree==true ){
-
-                if( i!=0 ){
-                    ProcessEventInfo( &wdata );
-                    //cout << wdata.edep_he_n << endl;
-                    tree->Fill();
-                    evt_counter++;
-                    ResetEventInfo( &wdata );
-                }
-                
-                wdata.ID = evt_counter;
-                wdata.evtID = data.eventID;
-            }
-            else{
-                string volume_name = data.volume_name;
-
-                Hit hit;
-                hit.parentID = data.parentID;
-                hit.particle = data.particle_name;
-                hit.process = data.proc_name;
-                hit.volume = data.volume_name;
-                hit.edep = data.Edep;
-                hit.time = data.time;
-
-                wdata.hit_collection.push_back( hit );
-            }
-
-        }
-
-        infile->Close();
-    }
-
-    outfile->cd();
-    tree->Write();
-    outfile->Close();
-*/
     return 0;
 }
 
