@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 
+#include "TrackReader.h"
+
 #include "TTree.h"
 #include "TFile.h"
 
@@ -140,7 +142,18 @@ int main( int argc, char* argv[]){
         cout << " " << *itr;
     cout << " will be recorded.\n";
 
-    
+    // Initialize the reader object to read and process the tracks and generate output file with event-level info..
+    TrackReader reader;
+
+    reader.SetActiveVolume( activeVolumes );
+    reader.SetVoI( voi );
+
+    reader.SetDAQWindow( 1 );
+    reader.SetCoinWindow( 0.5 );
+
+    reader.Process( outputFile, inputFiles );
+
+    reader.Reset();
 
     return 0;
 }

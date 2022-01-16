@@ -1,16 +1,24 @@
 
-#include "ProcessTrack.h"
+#include "TrackReader.h"
 
-void ProcessFile( string outputFileNameStr, vector<string> inputs ){
+#include "TTree.h"
+#include "TFile.h"
+
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+void TrackReader::Process( string outputStr, vector<string> inputStr ){
 
     // ==================================================
     // Create ROOT file
     // ==================================================
     //
-    TFile* file = new TFile( outputFileNameStr, "NEW");
+    TFile* outputFile = new TFile( outputStr.c_str(), "NEW" );
 
-    if( !file ){
-        cerr << "Error creating output file " << outputFileNameStr << endl;
+    if( !outputFile ){
+        cerr << "Error creating output file " << outputStr << endl;
         return;
     }
 
@@ -20,13 +28,8 @@ void ProcessFile( string outputFileNameStr, vector<string> inputs ){
     //
     // If no volume-of-interest is specified, iterate over the file to get all the volumes involved.
     if( arrayVOI.empty()==true ){
-    
-    }
-
-    // If no particle discrimination is specified, do nothing.
-    // Later this will be used to create a global edep variable to contain the total edep.
-    if( arrayPID.empty()==true ){
-        usePID = false;
+        cout << "Volume-of-Interest is empty. Will treat all volumes as VOI.\n"; 
+        arrayVOI = GetVOIFromFile( inputStr );
     }
 
     // ==================================================
@@ -35,32 +38,34 @@ void ProcessFile( string outputFileNameStr, vector<string> inputs ){
     //
     TTree* tree = new TTree("events", "Event-level information for MC simulated tracks.");
 
-    tree->Branch( "file", &outputFileNameChar, "file[128]/C");
+    stringstream ss;
+    ss << "file[" << MAX_FILENAME_LEN << "]/C";
+
+    tree->Branch( "file", &inputFileNameChar, ss.str().c_str() );
     tree->Branch( "ID", &ID, "ID/I");
     tree->Branch( "eventID", &eventID, "eventID/I");
     tree->Branch( "clusterIndex", &clusterIndex, "clusterIndex/I");
     
     // Generate energy deposition array for volumes of interest.
+    //
     for( vector<string>::iterator itr1 = arrayVOI.begin(); itr1!=arrayVOI.end(); itr1++ ){
         
         string volumeName = *itr1;
-        vector<Hit> hit;
 
         string edepName = string("edep_") + *itr1;
-        string rootName = edepName+"/D";
+        string rootName = edepName + "/D";
             // rootName is name + ROOT data format.
 
-        energyDeposit[ name ] = 0;
-        timeStamp[ name ] = -1;
-        hitArray[ volumeName ] = hit;
+        energyDeposit[ volumeName ] = 0;
+        timeStamp[ volumeName ] = -1;
 
         // Set address for ROOT tree branch
-        tree->Branch( edepName, &energyDeposit[name], rootName.c_str() );
-        tree->Branch( "timeStamp", &timeStamp[name], "timeStamp/D" );
+        tree->Branch( edepName.c_str(), &energyDeposit[volumeName], rootName.c_str() );
+        tree->Branch( "timeStamp", &timeStamp[volumeName], "timeStamp/D" );
     }
 
     ID = 0;
-
+/*
     for( vector<string>::iterator itr = inputs.begin(); itr!=inputs.end(); itr++ ){
         
         // ==================================================
@@ -141,9 +146,12 @@ void ProcessFile( string outputFileNameStr, vector<string> inputs ){
         }
         
     }
-    
+    */
 
 }
+
+
+/*
 
 void ProcessHitArray(){
     
@@ -199,3 +207,4 @@ bool IsNewEvent( char* name ){
     return false;
 }
 
+*/
