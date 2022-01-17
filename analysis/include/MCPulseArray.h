@@ -17,11 +17,18 @@ public:
 
 	MCPulseArray& operator=( const MCPulseArray& a);
 
-	~MCPulseArray(){}
+	~MCPulseArray();
 
-	void Sort(){ std::sort( pulseArray.begin(), pulseArray.end() ); }
+    void Clear(){ pulseArray.clear(); }
 
-	void PushBack( MCPulse a){ pulseArray.push_back(a); }
+	void Sort(){
+        std::sort( pulseArray.begin(), pulseArray.end() );
+        ResetIterator();
+    }
+
+	void PushBack( MCPulse a){
+        pulseArray.push_back(a);
+    }
 
 	void ResetIterator(){ head = pulseArray.begin(); }
 

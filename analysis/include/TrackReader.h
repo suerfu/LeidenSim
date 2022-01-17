@@ -5,6 +5,12 @@
 #include <vector>
 #include <map>
 
+#include "MCPulseArray.h"
+#include "StepInfo.h"
+
+#include "TFile.h"
+#include "TTree.h"
+
 using namespace std;
 
 class TrackReader{
@@ -44,7 +50,7 @@ public:
 
 private:
 
-    static const unsigned int MAX_FILENAME_LEN = 128;
+    static const unsigned int MAX_FILENAME_LEN = 64;
 
     double daqWindow;
     double coinWindow;
@@ -58,15 +64,16 @@ private:
     vector<string> GetVOIFromFile( vector<string> inputName){}
         // Iterate through given files to generate a list of volumes involved.
 
+
+    void ConfigureTTree( TTree* tree);
+
     // Set branch variables to the default values.
-    void InitializeBranchVariables(){
+    void DefaultBranchVariables(){
         map<string, double>::iterator itr;
         for( itr = energyDeposit.begin(); itr!=energyDeposit.end(); itr++ ){
             itr->second = 0;
         }
-        for( itr = timeStamp.begin(); itr!=timeStamp.end(); itr++ ){
-            itr->second = -1;
-        }
+        timeStamp = -1;
     }
 
     char inputFileNameChar[ MAX_FILENAME_LEN ];
@@ -77,58 +84,29 @@ private:
         // event ID in its own run.
     unsigned int clusterIndex;
         // index of the event cluster when multiple event occurred in the DAQ window.
+    double timeStamp;
+        // timeStamp of the interaction.
 
     map<string, double> energyDeposit;
-    map<string, double> timeStamp;
 
-    /*
-    map<string, vector<Hit>> hitArrayActive;
-    map<string, vector<Hit>> hitArrayActiveSum;
-    map<string, vector<Hit>> hitArrayVOI;
-    map<string, vector<Hit>> hitArrayVOISum;
-        // Contains hit for each volume
-        // Hit class contains particle name, edep and time.
-    */
+    void ProcessFile( TTree* tree, string s);
+
+    void ProcessPulseArray( TTree* tree );
+
+    bool NewEvent( char* name );
+
+    StepInfo rdata;
+
+    map<string, MCPulseArray> pulseArrayAV;
+    //map<string, double> edepAVWrite;
+
+    map<string, MCPulseArray> pulseArrayVOI;
+    //map<string, double> edepVOIWrite;
+
+    MCPulse ConvertToMCPulse( StepInfo );
+
+    void FindEventTime( string& s, double& t);
 };
 
-/*
-class HitArray{
-
-public:
-
-    HitArray();
-
-    ~HitArray();
-
-    void Sort(){ std::sort( array.begin(), array.end()); }
-
-    void Cluster( double time){
-        Hit tmp;
-        tmp.time = time;
-    }
-
-    void ResetIterator(){ header = array.begin(); }
-private:
-
-    vector<Hit> array;
-
-    vector<Hit>::iterator header;
-
-};
-
-struct Hit{
-
-    double time;
-
-    double edep;
-
-    string particle;
-
-    bool operator <( const Hit& b){
-        return time < b.time;
-    }
-
-};
-*/
 
 #endif

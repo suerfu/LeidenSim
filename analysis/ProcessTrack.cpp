@@ -148,8 +148,15 @@ int main( int argc, char* argv[]){
     reader.SetActiveVolume( activeVolumes );
     reader.SetVoI( voi );
 
-    reader.SetDAQWindow( 1 );
-    reader.SetCoinWindow( 0.5 );
+    if( cmdl.Find("--daq")==true )
+        reader.SetDAQWindow( stof(cmdl.Get("--daq")[0]) ); 
+    else
+        reader.SetDAQWindow( 1000 );
+
+    if( cmdl.Find("--coin")==true )
+        reader.SetCoinWindow( stof(cmdl.Get("--coin")[0]) ); 
+    else
+        reader.SetCoinWindow( 1 );
 
     reader.Process( outputFile, inputFiles );
 

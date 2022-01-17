@@ -1,5 +1,7 @@
 
-#include "MCPulseArray"
+#include <cmath>
+
+#include "MCPulseArray.h"
 
 
 MCPulseArray::MCPulseArray(){
@@ -56,7 +58,7 @@ MCPulse MCPulseArray::FindCoincidentInteraction( double start, double win_coin, 
 
     for( beg=pulseArray.begin(); beg!=pulseArray.end(); beg++ ){
         double t = beg->GetTime();
-        if( abs(start-t) < win_coin ){
+        if( abs( float(start-t) ) < win_coin ){
             break;
         }
         else if( t-start>win_coin ){

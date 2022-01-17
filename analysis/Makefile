@@ -1,9 +1,17 @@
-CC = g++
+CC = g++ -std=c++11
 
 all : ProcessTrack
 
-ProcessTrack : ProcessTrack.cpp 
-	$(CC) -I./include ProcessTrack.cpp ./src/TrackReader.cpp -o ProcessTrack `root-config --cflags --glibs`
+test : testPulse testPulseArray
+
+ProcessTrack : ProcessTrack.cpp ./src/TrackReader.cpp ./src/MCPulse.cpp ./src/MCPulseArray.cpp 
+	$(CC) -I./include $^ -o $@ `root-config --cflags --glibs`
+
+testPulse : testPulse.cpp ./src/MCPulse.cpp
+	$(CC) -I./include $^ -o $@
+
+testPulseArray : testPulseArray.cpp ./src/MCPulse.cpp ./src/MCPulseArray.cpp
+	$(CC) -I./include $^ -o $@
 
 clean :
 	rm ProcessTrack
