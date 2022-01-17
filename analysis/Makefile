@@ -7,11 +7,11 @@ test : testPulse testPulseArray
 ProcessTrack : ProcessTrack.cpp ./src/TrackReader.cpp ./src/MCPulse.cpp ./src/MCPulseArray.cpp 
 	$(CC) -I./include $^ -o $@ `root-config --cflags --glibs`
 
-testPulse : testPulse.cpp ./src/MCPulse.cpp
+testPulse : ./test/testPulse.cpp ./src/MCPulse.cpp
 	$(CC) -I./include $^ -o $@
 
-testPulseArray : testPulseArray.cpp ./src/MCPulse.cpp ./src/MCPulseArray.cpp
+testPulseArray : ./test/testPulseArray.cpp ./src/MCPulse.cpp ./src/MCPulseArray.cpp
 	$(CC) -I./include $^ -o $@
 
 clean :
-	rm ProcessTrack
+	rm ProcessTrack testPulse testPulseArray
