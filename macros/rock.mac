@@ -1,0 +1,35 @@
+#Set geometry
+/geometry/type 1
+
+/geometry/dimensionFile config/geometry/dimensions_Ricochet.dat
+/geometry/cryostatWallFile config/geometry/cryostatWall_Ricochet.dat
+/geometry/cryoPlateFile config/geometry/cryoPlates_Ricochet.dat
+/geometry/cryoBeamFile config/geometry/cryostatBeams_Ricochet.dat
+
+/run/initialize
+/tracking/verbose 0
+
+#/filter/excludeParticle e-
+#/filter/excludeVolume fs1
+#/filter/excludeProcess Transport
+
+/filter/recordWhenHit virtualDetector
+/filter/killWhenHit virtualDetector
+#/filter/killWhenHit rockSURF
+    # volumes involved are rockSURF virtualDetector
+
+/gps/particle   ion
+/gps/ion 19 40
+    # potassium 40
+#/gps/ion 92 238
+    # uranium 238
+
+#/gps/particle   mu+
+#/gps/particle neutron
+#/gps/particle alpha
+#/gps/particle proton
+
+/gps/position 0 0 -5 cm
+/gps/energy 0 keV
+
+/run/beamOn 10000

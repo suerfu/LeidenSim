@@ -63,6 +63,9 @@ public:
     void AddExcludeProcess( G4String a);
     bool ExcludeProcess( G4String a);
 
+    void AddKillWhenHit( G4String a);
+    bool KillWhenHit( G4String a);
+
 
 private:
 
@@ -79,6 +82,8 @@ private:
     std::vector< long > randomSeeds;
 
     std::set< G4String > recordWhenHit;
+    std::set< G4String > killWhenHit;
+
     std::set< G4String > excludeParticle;
     std::set< G4String > excludeVolume;
     std::set< G4String > excludeProcess;

@@ -24,7 +24,8 @@ StackingAction::~StackingAction(){ }
 
 G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track){
 
-    G4double window = 1.e6*CLHEP::ns;
+    G4double window = 60.e9*CLHEP::ns;
+        // 1-minute window
 
     G4String particleName = track->GetDefinition()->GetParticleName();
 
@@ -33,6 +34,16 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
     if( particleName=="anti_nu_e" || particleName=="nu_e" ){
         return fKill;
     }
+
+    G4VPhysicalVolume* pv = track->GetVolume();
+
+    if( pv!=0 ){
+        G4String vol = pv->GetName();
+        if( fRunAction->KillWhenHit( vol ) ){
+            return fKill;
+        }
+    }
+    
 
     G4String motherProcess = "";
     if( track->GetCreatorProcess()!=0 ){
