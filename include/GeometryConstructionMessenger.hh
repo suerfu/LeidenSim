@@ -26,12 +26,15 @@ class G4UIdirectory;
 class GeometryConstructionMessenger: public G4UImessenger{
 
 public:
+
     GeometryConstructionMessenger(GeometryConstruction* det);
+
     virtual ~GeometryConstructionMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
 
 private:
+
     GeometryConstruction* detector;
 
     G4UIdirectory* directory;
@@ -40,6 +43,7 @@ private:
 	G4UIcmdWithAString*   fCryostatWallFileCmd;
 	G4UIcmdWithAString*   fCryoPlateFileCmd;
 	G4UIcmdWithAString*   fCryoBeamFileCmd;
+
    // G4UIcmdWith3VectorAndUnit* posCmd;
    //     // Command to specify position of the farside detector
    // G4UIcmdWithADoubleAndUnit* angCmd_x;

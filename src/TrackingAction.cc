@@ -60,8 +60,8 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track){
     stepInfo.momentumDir = track->GetMomentumDirection();
     stepInfo.globalTime = track->GetGlobalTime();
 
-    stepInfo.Eki = track->GetKineticEnergy()/keV;
-    stepInfo.Ekf = track->GetKineticEnergy()/keV;
+    stepInfo.Eki = track->GetKineticEnergy()/CLHEP::keV;
+    stepInfo.Ekf = track->GetKineticEnergy()/CLHEP::keV;
 
     stepInfo.processName = procName;
 

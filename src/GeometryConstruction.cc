@@ -92,11 +92,18 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
 
 void GeometryConstruction::ConstructUserVolumes(){
-	G4cout<<"Construct user volumes..."<<G4endl;
+
+	G4cout<<"Constructing user volumes..."<<G4endl;
+
 	// At this point GeometryManager::SetFilePath() has been called by GeometryConstructionMessenger 
 	// Mark that we are ready to load dimensions!
+    //
 	GeometryManager::Get()->GeometryTypeAndFilesSet();
-	// Load dimensions. 
+
+	// Load dimensions.
+    // Note by Suerfu on 2022-Jan-17:
+    // The types of dimension files should depend on geometry type.
+    // Maybe consider loading different sets of files depending on the type of geometry?
 	GeometryManager::Get()->LoadDimensions();
 	G4int geoType = GeometryManager::Get()->GetGeometryType();
 	G4cout<<"geometry type is "<<geoType<<G4endl;
@@ -104,6 +111,7 @@ void GeometryConstruction::ConstructUserVolumes(){
 	//Construct geometry.
 	//It is a good idea to use only one geoType tag to control major and sub types.
 	//It helps to avoid potentially conflicting user commends. 
+    //
 	if(geoType==0){ //TESSERACT
 	        G4cout<<"TESSERACT"<<G4endl;
 			//Each component is instantiated and constructed seperately.
@@ -115,7 +123,26 @@ void GeometryConstruction::ConstructUserVolumes(){
 			//FIXME! Add HERALD to another geoType. 
 			// detectorSPICE->Construct();
 	}
-	else if(geoType==1){ //Cubic cow
+    else if( geoType==1){
+
+        G4double density = 3.26 * g/cm3;
+
+        G4Material* rockMaterial = GeometryManager::Get()->GetMaterial( "Rock_SURF" );
+
+        G4LogicalVolume* world_lv = GeometryManager::Get()->GetLogicalVolume("world");
+
+        G4Box* rock_solid = new G4Box( "rock_solid", world_x/2.0, world_y/2.0, world_z/4.0);
+        G4LogicalVolume* rock_lv = new G4LogicalVolume( rock_solid, rockMaterial, "rock_lv");
+        G4VPhysicalVolume* rock_pv = new G4PVPlacement( 0, G4ThreeVector(0,0,-world_z/4), rock_lv, "rockSURF", world_lv, false, 0, fCheckOverlaps);
+
+        G4Material* virtualDetMaterial = GeometryManager::Get()->GetMaterial( "G4_Galactic" );
+
+        G4Box* det_solid = new G4Box( "virtualDetector_solid", world_x/2.0, world_y/2.0, world_z/4.0);
+        G4LogicalVolume* det_lv = new G4LogicalVolume( det_solid, virtualDetMaterial, "virtualDetector_lv");
+        G4VPhysicalVolume* det_pv = new G4PVPlacement( 0, G4ThreeVector(0,0,world_z/4), det_lv, "virtualDetector", world_lv, false, 0, fCheckOverlaps);
+
+    }
+	else{ //Cubic cow
 		simple_cube->Construct();
 
 		const int Nfs = 6;
@@ -131,11 +158,8 @@ void GeometryConstruction::ConstructUserVolumes(){
 			fs[i] -> PlaceDetector( name.str(), pos );
 		}
 	}
-	else{ 
-		G4cerr<<"GeometryConstruction:: Geometry Type"<<geoType<<" not defined!"<<G4endl;
-	}
+    
 	G4cout<<"User volumes constructed!!!"<<G4endl;
-
 
 }
 
