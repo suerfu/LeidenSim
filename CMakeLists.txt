@@ -66,6 +66,7 @@ set(SCRIPTS
   /config/geometry/cryostatWall_Nucleus.dat
   /config/geometry/dimensions_Nucleus.dat
   /macros/test.mac
+  /macros/rock.mac
   )
 
 foreach(_script ${SCRIPTS})
