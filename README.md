@@ -65,7 +65,9 @@ Dimensions of the geometries are stored under `config/geometry/`. New geometries
 /geometry/cryoPlateFile config/geometry/cryoPlates_XX.dat
 /geometry/cryoBeamFile config/geometry/cryoBeams_XX.dat
 ```
-- 1 : "Cubic cow". The mock-up geometry is a cube target named *target* in the center of the world. The cube has an empty center, and is surrounded by a few farside detectors called *fsN* where N is a number starting from 0.
+- 1 : Rock geometry.
+Creates a 10m x 10m x 5m Rock with Chemical composition of Homestake cavern and density of 3.26 g/cm3. The rock material is placed at the bottom half of the world and top half is called a virtualDetector, which is basically vacuum that does not block any particle.
+- other : "Cubic cow". The mock-up geometry is a cube target named *target* in the center of the world. The cube has an empty center, and is surrounded by a few farside detectors called *fsN* where N is a number starting from 0.
 
 Available commands for `type 1` include 
 ```
@@ -89,11 +91,14 @@ can be used to sample particle distributions from another ROOT file.
 ```
 /filter/recordWhenHit bar
 ```
-record the entire tracks when there is a hit in detector *bar*.
-
+Record the entire tracks when there is a hit in detector *bar*.
+```
+/filter/killWhenHit bar
+```
+Kill any particles that makes their way to detector named *bar*. Useful when you want to sample flux on a surface.
 ```
 /filter/excludeParticle bar
 /filter/excludeProcess bar
 /filter/excludeVolume bar
 ```
-excludes certain particles, processes and volumes. When the condition matches, the step is not recorded. In addition to these explicit conditions, neutrinos are by default ignored.
+Excludes certain particles, processes and volumes. When the condition matches, the step is not recorded. In addition to these explicit conditions, neutrinos are by default ignored.
