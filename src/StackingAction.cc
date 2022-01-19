@@ -27,16 +27,17 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
     G4double window = 60.e9*CLHEP::ns;
         // 1-minute window
 
-    G4String particleName = track->GetDefinition()->GetParticleName();
+
 
     // By default, ignore or do not track neutrinos
     //
+    G4String particleName = track->GetDefinition()->GetParticleName();
     if( particleName=="anti_nu_e" || particleName=="nu_e" ){
         return fKill;
     }
 
+    // Next, if particle falls onto kill when hit volume, delete the track.
     G4VPhysicalVolume* pv = track->GetVolume();
-
     if( pv!=0 ){
         G4String vol = pv->GetName();
         if( fRunAction->KillWhenHit( vol ) ){
@@ -44,7 +45,15 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
         }
     }
     
+    // If global time is within the window, return urgent regardless of the process:
+    //
+    G4double time = track->GetGlobalTime();
+    if( time<window ){
+        return fUrgent;
+    }
 
+    // Check if it's a radioactive decay that happened years later.
+    //
     G4String motherProcess = "";
     if( track->GetCreatorProcess()!=0 ){
         motherProcess = track->GetCreatorProcess()->GetProcessName();
@@ -62,6 +71,6 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
 
 void StackingAction::NewStage(){
     StepInfo stepinfo;
-    stepinfo.processName = "timeReset";
+    stepinfo.SetProcessName( "timeReset" );
     fEventAction->GetStepCollection().push_back(stepinfo);
 }

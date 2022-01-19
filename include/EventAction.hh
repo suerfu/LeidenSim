@@ -58,11 +58,45 @@ private:
     G4String tmp_volumeName;
     G4String tmp_processName;
     
-    G4ThreeVector position;
-    G4ThreeVector momentum;
+    int eventID;
+    int trackID;
+    int parentID;
+    int stepID;
 
-    StepInfo wStep;
-        //!< StepInfo for writing to ROOT output.
+    double rx, ry, rz;
+    double px, py, pz;
+    double Eki, Ekf, Edep;
+    double globalTime;
+
+    void SetFillValue( StepInfo& wStep){
+
+        eventID = wStep.GetEventID();
+        trackID = wStep.GetTrackID();
+        parentID = wStep.GetParentID();
+        stepID = wStep.GetStepID();
+
+        tmp_particleName = wStep.GetParticleName();
+        tmp_volumeName = wStep.GetVolumeName();
+        tmp_processName = wStep.GetProcessName();
+
+        strncpy( particleName, tmp_particleName.c_str(), max_char_len);
+        strncpy( processName, tmp_processName.c_str(), max_char_len);
+        strncpy( volumeName, tmp_volumeName.c_str(), max_char_len);
+        
+        rx = wStep.GetPosition().x()/CLHEP::mm;
+        ry = wStep.GetPosition().y()/CLHEP::mm;
+        rz = wStep.GetPosition().z()/CLHEP::mm;
+
+        px = wStep.GetPosition().x();
+        py = wStep.GetPosition().y();
+        pz = wStep.GetPosition().z();
+
+        Eki = wStep.GetEki()/CLHEP::keV;
+        Ekf = wStep.GetEkf()/CLHEP::keV;
+        Edep = wStep.GetEdep()/CLHEP::keV;
+
+        globalTime = wStep.GetGlobalTime()/CLHEP::ns;
+    }
 };
 
 

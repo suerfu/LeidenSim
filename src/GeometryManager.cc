@@ -548,12 +548,12 @@ void GeometryManager::LoadCryoBeam(){
 
 
 void GeometryManager::SetVisAttributes(){
-	G4cout<<"Set colors..."<<G4endl;
+	//G4cout<<"Set colors..."<<G4endl;
     G4PhysicalVolumeStore* store = G4PhysicalVolumeStore::GetInstance();
 	for(auto itr = store->begin(); itr!=store->end(); ++itr){
-		G4cout << (*itr)->GetName() << G4endl;
-		G4cout << (*itr)->GetLogicalVolume()->GetVisAttributes() << G4endl;
-		G4cout << " with material " << (*itr)->GetLogicalVolume()->GetMaterial()->GetName() << G4endl;
+		//G4cout << (*itr)->GetName() << G4endl;
+		//G4cout << (*itr)->GetLogicalVolume()->GetVisAttributes() << G4endl;
+		//G4cout << " with material " << (*itr)->GetLogicalVolume()->GetMaterial()->GetName() << G4endl;
 		if( (*itr)->GetLogicalVolume()->GetVisAttributes()==0 ){
 			G4Color color =  materialColor[(*itr)->GetLogicalVolume()->GetMaterial()->GetName()];
 			(*itr)->GetLogicalVolume()->SetVisAttributes(color);
