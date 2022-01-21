@@ -87,9 +87,9 @@ private:
         ry = wStep.GetPosition().y()/CLHEP::mm;
         rz = wStep.GetPosition().z()/CLHEP::mm;
 
-        px = wStep.GetPosition().x();
-        py = wStep.GetPosition().y();
-        pz = wStep.GetPosition().z();
+        px = wStep.GetMomentumDir().x();
+        py = wStep.GetMomentumDir().y();
+        pz = wStep.GetMomentumDir().z();
 
         Eki = wStep.GetEki()/CLHEP::keV;
         Ekf = wStep.GetEkf()/CLHEP::keV;
