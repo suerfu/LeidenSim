@@ -74,7 +74,7 @@ int main( int argc, char* argv[]){
         Double_t time,X_pos,Y_pos,Z_pos,X_mom,Y_mom,Z_mom, Intial_E, Final_E;
         Int_t event_ID,track_ID, step_ID, parent_ID;
         //string Vol_ID,Particle_ID;
-        char Vol_ID[16], Particle_ID[16], Process_ID[16];
+        char NextVol_ID[16], Vol_ID[16], Particle_ID[16], Process_ID[16];
 
         Double_t Temp_X_pos,Temp_Y_pos,Temp_Z_pos;
         char Temp_particle[16];
@@ -86,6 +86,7 @@ int main( int argc, char* argv[]){
         t1->SetBranchAddress("parentID",&parent_ID);
         t1->SetBranchAddress("stepID",&step_ID);
         t1->SetBranchAddress("volume",Vol_ID);
+        t1->SetBranchAddress("nextVolume",NextVol_ID);
         t1->SetBranchAddress("rx",&X_pos);
         t1->SetBranchAddress("ry",&Y_pos);
         t1->SetBranchAddress("rz",&Z_pos);
@@ -104,6 +105,7 @@ int main( int argc, char* argv[]){
             Int_t n_secondary;
 
             std::string Volume(Vol_ID);
+            std::string NextVolume(Vol_ID);
             std::string Particle(Particle_ID);
             std::string Process(Process_ID);
 
@@ -115,7 +117,7 @@ int main( int argc, char* argv[]){
                 eventID = event_ID;
             }
 
-            if ( Volume == "virtualDetector" ) {
+            if ( Volume == "virtualDetector" && NextVolume == "OutOfWorld" ) {
                 ARt[Multiplicity]=time;
                 ARrx[Multiplicity]=X_pos;
                 ARry[Multiplicity]=Y_pos;
