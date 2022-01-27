@@ -105,7 +105,7 @@ int main( int argc, char* argv[]){
             Int_t n_secondary;
 
             std::string Volume(Vol_ID);
-            std::string NextVolume(Vol_ID);
+            std::string NextVolume(NextVol_ID);
             std::string Particle(Particle_ID);
             std::string Process(Process_ID);
 
