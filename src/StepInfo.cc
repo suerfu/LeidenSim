@@ -70,20 +70,22 @@ StepInfo::StepInfo( const G4Step* step )
 
     SetParticleName( track->GetParticleDefinition()->GetParticleName() );
 
+    SetVolumeName( preStep->GetPhysicalVolume()->GetName() );
+
     // If postStep is not pointing to any physical volume, set a special flag.
-    if(!preStep->GetPhysicalVolume()){
-        SetVolumeName( "OutOfWorld" );
+    if(!postStep->GetPhysicalVolume()){
+        SetNextVolumeName( "OutOfWorld" );
         SetVolumeCopyNumber( 0 );
     }
     else {
-        SetVolumeName( preStep->GetPhysicalVolume()->GetName() );
-        SetVolumeCopyNumber( preStep->GetPhysicalVolume()->GetCopyNo() );
+        SetNextVolumeName( postStep->GetPhysicalVolume()->GetName() );
+        SetVolumeCopyNumber( postStep->GetPhysicalVolume()->GetCopyNo() );
     }
 
     // Retrieve kinematic information.
     //
-    SetPosition( postStep->GetPosition() );
-    SetMomentumDir(postStep->GetMomentumDirection() );
+    SetPosition( preStep->GetPosition() );
+    SetMomentumDir(preStep->GetMomentumDirection() );
     SetGlobalTime( postStep->GetGlobalTime() );
 
     SetEki( preStep->GetKineticEnergy() );

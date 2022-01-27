@@ -45,6 +45,9 @@ public:
     void SetVolumeCopyNumber( G4int i){ volumeCopyNumber = i; }
     G4int GetVolumeCopyNumber(){ return volumeCopyNumber; }
 
+    void SetNextVolumeName( G4String name){ nextVolumeName = name; }
+    G4String GetNextVolumeName(){ return nextVolumeName;}
+
     void SetEki(G4double a){ Eki = a;}
     G4double GetEki(){ return Eki;}
 
@@ -77,6 +80,8 @@ private:
 
     G4String volumeName;
     G4int volumeCopyNumber;
+    
+    G4String nextVolumeName;
 
     G4double Eki;
     G4double Ekf;

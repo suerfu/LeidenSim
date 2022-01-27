@@ -71,6 +71,7 @@ void EventAction::BeginOfEventAction(const G4Event*){
             // geometric information
             //
             data_tree->Branch("volume", volumeName, "volume[16]/C");
+            data_tree->Branch("nextVolume", nextVolumeName, "nextVolume[16]/C");
             data_tree->Branch("rx", &rx, "rx/D");
             data_tree->Branch("ry", &ry, "ry/D");
             data_tree->Branch("rz", &rz, "rz/D");
@@ -122,7 +123,7 @@ void EventAction::EndOfEventAction(const G4Event* event){
         
         if( record==true ){
 
-            for( size_t i=0; i < stepCollection.size(); ++i ){
+            for( size_t i=0; i < stepCollection.size()-1; ++i ){
                 
                 // If process name is newEvent or timeReset, it means the end of previous event and one should write all the output.
                 //

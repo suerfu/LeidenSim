@@ -54,6 +54,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track* track){
     stepInfo.SetParentID( track->GetParentID() );
 
     stepInfo.SetVolumeName( track->GetVolume()->GetName() );
+    stepInfo.SetNextVolumeName( track->GetVolume()->GetName() );
     stepInfo.SetVolumeCopyNumber( track->GetVolume()->GetCopyNo() );
 
     stepInfo.SetPosition( track->GetPosition() );

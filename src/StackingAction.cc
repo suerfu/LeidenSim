@@ -10,6 +10,7 @@
 
 #include "G4Track.hh"
 #include "G4VProcess.hh"
+#include "G4StackManager.hh"
 
 #include "G4SystemOfUnits.hh"
 
@@ -23,11 +24,6 @@ StackingAction::~StackingAction(){ }
 
 
 G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track){
-
-    G4double window = 60.e9*CLHEP::ns;
-        // 1-minute window
-
-
 
     // By default, ignore or do not track neutrinos
     //
@@ -47,8 +43,11 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
     
     // If global time is within the window, return urgent regardless of the process:
     //
+    G4double window = 60*CLHEP::s;
+        // 1-minute window
+
     G4double time = track->GetGlobalTime();
-    if( time<window ){
+    if( time < window ){
         return fUrgent;
     }
 
@@ -70,7 +69,10 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track* track
 
 
 void StackingAction::NewStage(){
+//    if( stackManager->GetNWaitingTrack()>0 ){
     StepInfo stepinfo;
     stepinfo.SetProcessName( "timeReset" );
     fEventAction->GetStepCollection().push_back(stepinfo);
+//    }
+
 }
