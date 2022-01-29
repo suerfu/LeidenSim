@@ -14,7 +14,7 @@
 //#include "GeometryManager.hh"
 #include "FarsideDetectorMessenger.hh"
 
-#include "SimpleCube.hh"
+#include "Leiden.hh"
 #include "globals.hh"
 
 
@@ -53,7 +53,7 @@ private:
     G4double world_y;
     G4double world_z;
 
-    SimpleCube* simple_cube;
+    Leiden* simple_cube;
 };
 
 

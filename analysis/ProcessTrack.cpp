@@ -105,10 +105,11 @@ int main( int argc, char* argv[]){
         cerr << "No active volume found. Specify it with --active option.\n";
         return -1;
     }
+    /*
     if( cmdl.Find("--voi")==false ){
-        cerr << "No volume-of-interest found. Specify it with --voi option.\n";
-        return -1;
+        cerr << "No volume-of-interest found. Taking all volumes as VOI (note this option may take significantly longer).\n";
     }
+    */
 
     // Define a number of variables
     //
@@ -137,10 +138,12 @@ int main( int argc, char* argv[]){
         cout << " " << *itr;
     cout << " will be used to find and cluster events.\n";
 
+    /*
     cout << "Energy deposits in";
     for( vector<string>::iterator itr=voi.begin(); itr!=voi.end(); itr++ )
         cout << " " << *itr;
     cout << " will be recorded.\n";
+    */
 
     // Initialize the reader object to read and process the tracks and generate output file with event-level info..
     TrackReader reader;
@@ -156,7 +159,7 @@ int main( int argc, char* argv[]){
     if( cmdl.Find("--coin")==true )
         reader.SetCoinWindow( stof(cmdl.Get("--coin")[0]) ); 
     else
-        reader.SetCoinWindow( 1 );
+        reader.SetCoinWindow( 100 );
 
     reader.Process( outputFile, inputFiles );
 

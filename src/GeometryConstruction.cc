@@ -46,7 +46,7 @@ GeometryConstruction::GeometryConstruction() : G4VUserDetectorConstruction(){
     world_y = 10.*m;
     world_z = 10.*m;
 
-    simple_cube = new SimpleCube();
+    simple_cube = new Leiden();
     fFarsideMessenger = new FarsideDetectorMessenger();
 }
 
@@ -92,38 +92,8 @@ G4VPhysicalVolume* GeometryConstruction::ConstructWorld(){
 
 
 void GeometryConstruction::ConstructUserVolumes(){
-
-	G4cout<<"Constructing user volumes..."<<G4endl;
-
-	// At this point GeometryManager::SetFilePath() has been called by GeometryConstructionMessenger 
-	// Mark that we are ready to load dimensions!
-    //
-	GeometryManager::Get()->GeometryTypeAndFilesSet();
-
-	// Load dimensions.
-    // Note by Suerfu on 2022-Jan-17:
-    // The types of dimension files should depend on geometry type.
-    // Maybe consider loading different sets of files depending on the type of geometry?
-	GeometryManager::Get()->LoadDimensions();
-	G4int geoType = GeometryManager::Get()->GetGeometryType();
-	G4cout<<"geometry type is "<<geoType<<G4endl;
-	
-	//Construct geometry.
-	//It is a good idea to use only one geoType tag to control major and sub types.
-	//It helps to avoid potentially conflicting user commends. 
-    //
-	if(geoType==0){ //TESSERACT
-	        G4cout<<"TESSERACT"<<G4endl;
-			//Each component is instantiated and constructed seperately.
-			GeoShielding* TESSERACTShield = new GeoShielding();
-			GeoCryostat* TESSERACTCryostat = new GeoCryostat();
-			//GeoDetectorSPICE* detectorSPICE = new GeoDetectorSPICE());
-			TESSERACTShield->Construct();
-			TESSERACTCryostat->Construct();
-			//FIXME! Add HERALD to another geoType. 
-			// detectorSPICE->Construct();
-	}
-    else if( geoType==1){
+/*
+    if( geoType==1){
 
         G4double density = 3.26 * g/cm3;
 
@@ -142,23 +112,22 @@ void GeometryConstruction::ConstructUserVolumes(){
         G4VPhysicalVolume* det_pv = new G4PVPlacement( 0, G4ThreeVector(0,0,world_z/4), det_lv, "virtualDetector", world_lv, false, 0, fCheckOverlaps);
 
     }
-	else{ //Cubic cow
-		simple_cube->Construct();
+*/
+    simple_cube->Construct();
+/*
+    const int Nfs = 6;
+    FarsideDetector* fs[Nfs];
+    for( int i=0; i<Nfs; i++){
+        std::stringstream name;
+        name << "fs" << i;
+        fs[i] = new FarsideDetector();// fGeometryManager );
 
-		const int Nfs = 6;
-		FarsideDetector* fs[Nfs];
-		for( int i=0; i<Nfs; i++){
-			std::stringstream name;
-			name << "fs" << i;
-			fs[i] = new FarsideDetector();// fGeometryManager );
-
-			G4double distance = 50 * cm;
-			G4double angle = i*CLHEP::twopi/Nfs;
-			G4ThreeVector pos( distance*cos(angle), distance*sin(angle),0 );
-			fs[i] -> PlaceDetector( name.str(), pos );
-		}
-	}
-    
+        G4double distance = 50 * cm;
+        G4double angle = i*CLHEP::twopi/Nfs;
+        G4ThreeVector pos( distance*cos(angle), distance*sin(angle),0 );
+        fs[i] -> PlaceDetector( name.str(), pos );
+    }
+*/    
 	G4cout<<"User volumes constructed!!!"<<G4endl;
 
 }

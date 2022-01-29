@@ -288,6 +288,12 @@ void  GeometryManager::DefineMaterials( ){
 	materialColor["Ti"] = G4Color(0.1, 1, 0.1, 0.2);
 
     // ***********************************
+	// Liquid helium
+    // ***********************************
+    //
+    G4Material* LN2 = new G4Material("LN2", z=7., a= 28.014*g/mole, density= 0.8064*g/cm3);
+
+    // ***********************************
 	// Rock at Homestake
     // ***********************************
     //

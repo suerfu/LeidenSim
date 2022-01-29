@@ -4,11 +4,11 @@
     Contact: suerfu@berkeley.edu
 */
 
-/// \file SimpleCubeMessenger.hh
-/// \brief Definition of the SimpleCubeMessenger class
+/// \file LeidenMessenger.hh
+/// \brief Definition of the LeidenMessenger class
 
-#ifndef SimpleCubeMessenger_h
-#define SimpleCubeMessenger_h 1
+#ifndef LeidenMessenger_h
+#define LeidenMessenger_h 1
 
 #include "globals.hh"
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -18,34 +18,31 @@
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
 
-class SimpleCube;
+class Leiden;
 
 
-class SimpleCubeMessenger: public G4UImessenger{
+class LeidenMessenger: public G4UImessenger{
 
 public:
 
-    SimpleCubeMessenger( SimpleCube* );
+    LeidenMessenger( Leiden* );
 
-    virtual ~SimpleCubeMessenger();
+    virtual ~LeidenMessenger();
 
     virtual void SetNewValue(G4UIcommand*, G4String);
 
 private:
 
-    SimpleCube* detector;
+    Leiden* detector;
 
     G4UIdirectory* directory;
     
-    G4UIcmdWithAString* materialCmd;
-        // Material of the target.
-
-    G4UIcmdWith3VectorAndUnit* posCmd;
-        // Position of the target
-
-    G4UIcmdWithADoubleAndUnit* angCmd_x;
-    G4UIcmdWithADoubleAndUnit* angCmd_y;
-    G4UIcmdWithADoubleAndUnit* angCmd_z;
+    G4UIcmdWithADoubleAndUnit* cmdActiveLength;
+    G4UIcmdWithADoubleAndUnit* cmdCellDiameter;
+    G4UIcmdWithADoubleAndUnit* cmdCellHeight;
+    G4UIcmdWithADoubleAndUnit* cmdWallThickness;
+    G4UIcmdWithADoubleAndUnit* cmdLHe;
+    G4UIcmdWithADoubleAndUnit* cmdLN2;
         // Orientation of the target
 
     //G4UIcommand* place_detector;
