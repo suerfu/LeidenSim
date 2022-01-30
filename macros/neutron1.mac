@@ -1,0 +1,36 @@
+#Set geometry
+
+/cell/activeLen 1 cm
+/cell/cellLen 2.5 cm
+/cell/wallThickness 2 mm
+
+
+/run/initialize
+/tracking/verbose 0
+
+
+/filter/recordWhenHit cellActive
+
+#/gps/particle   ion
+#/gps/ion 19 40
+#/gps/ion 92 238
+
+/gps/particle neutron
+
+/gps/pos/type Point
+/gps/pos/centre 100 0 0 cm
+
+/gps/ang/type iso
+/gps/ang/rot1 0 1 0
+/gps/ang/rot2 0 0 1
+/gps/ang/mintheta 0 rad
+/gps/ang/maxtheta 0.15 rad
+
+#/gps/ene/type User
+#/gps/hist/type energy
+#/control/execute macros/n_yield_Unat.mac
+
+/gps/energy 2.8 MeV
+
+/run/printProgress 10000
+/run/beamOn 100000000

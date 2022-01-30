@@ -41,7 +41,6 @@ void Leiden::Construct(){
     G4Material* Cu = GeometryManager::Get()->GetMaterial("Cu");
     
     thisName = "cellEnclosure";
-
     G4Box* enclosure_solid = new G4Box( thisName+"_solid", (cellDiameter+wallThickness*2)/2, (cellDiameter+wallThickness*2)/2, (cellDiameter+wallThickness*2)/2);
     G4LogicalVolume* enclosure_lv = new G4LogicalVolume( enclosure_solid, Cu, thisName+"_lv");
     new G4PVPlacement( 0, G4ThreeVector(0,0,0), enclosure_lv, thisName, motherLogic, false, 0, fCheckOverlaps);
@@ -53,8 +52,7 @@ void Leiden::Construct(){
     new G4PVPlacement( 0, G4ThreeVector(0,0,0), bufferVolume_lv, thisName, enclosure_lv, false, 0, fCheckOverlaps);
 
     thisName = "cellWall";
-    G4double w = activeLength+2*mm;
-    G4Box* cellWall_solid = new G4Box( thisName+"_solid", w/2, w/2, w/2);
+    G4Box* cellWall_solid = new G4Box( thisName+"_solid", (activeLength+2*mm)/2, (activeLength+2*mm)/2, (activeLength+2*mm)/2);
     G4LogicalVolume* cellWall_lv = new G4LogicalVolume( cellWall_solid, Cu, thisName+"_lv");
     new G4PVPlacement( 0, G4ThreeVector(0,0,0), cellWall_lv, thisName, bufferVolume_lv, false, 0, fCheckOverlaps);
 
@@ -65,8 +63,9 @@ void Leiden::Construct(){
     new G4PVPlacement( 0, G4ThreeVector(0,0,0), activeVolume_lv, thisName, cellWall_lv, false, 0, fCheckOverlaps);
 
 
-    G4double inch = 2.54 * cm;
+    G4cout << "Constructing IVC" << G4endl;
 
+    G4double inch = 2.54 * cm;
 
     G4double IVC_ID = 6.59 * inch * 2;
     G4double IVC_wall = 0.09 * inch;
